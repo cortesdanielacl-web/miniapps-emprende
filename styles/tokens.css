@@ -1,0 +1,102 @@
+/**
+ * MiniApps Emprende — Design System V1
+ * Identidad visual compartida por todas las miniapps.
+ *
+ * 90% neutro · 10% color
+ * Azul marino → títulos / iconografía
+ * Azul eléctrico → acciones
+ * Turquesa → éxito / resultados
+ * Amarillo → tips / información
+ * Magenta → acentos puntuales
+ */
+
+:root {
+  /* Brand palette */
+  --brand-navy: #0f2c4c;
+  --brand-electric: #2563eb;
+  --brand-turquoise: #14b8a6;
+  --brand-yellow: #f59e0b;
+  --brand-magenta: #db2777;
+  --brand-primary: #0f2c4c;
+  --brand-blue: #2563eb;
+  --brand-green: #14b8a6;
+  --brand-accent: #db2777;
+  --brand-gray: #f8fafc;
+
+  /* Semantic tokens */
+  --background: #f8fafc;
+  --foreground: #334155;
+  --card: #ffffff;
+  --card-foreground: #334155;
+  --popover: #ffffff;
+  --popover-foreground: #334155;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
+  --secondary-foreground: #334155;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #f1f5f9;
+  --accent-foreground: #0f2c4c;
+  --destructive: #dc2626;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #2563eb;
+  --success: #14b8a6;
+  --success-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #334155;
+  --heading: #0f2c4c;
+  --chart-1: #0f2c4c;
+  --chart-2: #2563eb;
+  --chart-3: #14b8a6;
+  --chart-4: #f59e0b;
+  --chart-5: #db2777;
+  --radius: 1.125rem;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 3%), 0 6px 16px rgb(15 23 42 / 4%);
+  --shadow-result: 0 1px 2px rgb(15 23 42 / 4%), 0 12px 32px rgb(20 184 166 / 10%);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #334155;
+  --sidebar-primary: #2563eb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f1f5f9;
+  --sidebar-accent-foreground: #0f2c4c;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #2563eb;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --card: #1e293b;
+  --card-foreground: #e2e8f0;
+  --popover: #1e293b;
+  --popover-foreground: #e2e8f0;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #1e293b;
+  --secondary-foreground: #e2e8f0;
+  --muted: #334155;
+  --muted-foreground: #94a3b8;
+  --accent: #334155;
+  --accent-foreground: #e2e8f0;
+  --destructive: #ef4444;
+  --border: rgb(255 255 255 / 12%);
+  --input: rgb(255 255 255 / 15%);
+  --ring: #3b82f6;
+  --success: #2dd4bf;
+  --success-foreground: #0f172a;
+  --warning: #f59e0b;
+  --warning-foreground: #0f172a;
+  --heading: #e2e8f0;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 20%), 0 6px 16px rgb(0 0 0 / 20%);
+  --shadow-result: 0 1px 2px rgb(0 0 0 / 20%), 0 12px 32px rgb(45 212 191 / 12%);
+  --sidebar: #1e293b;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #334155;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: rgb(255 255 255 / 12%);
+  --sidebar-ring: #3b82f6;
+}
