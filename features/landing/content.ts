@@ -73,7 +73,7 @@ export const landingContent = {
     ],
     cta: {
       label: "Comprar ahora",
-      href: "#",
+      href: "https://www.webpay.cl/form-pay/402692",
     },
     footnote: "*Precio de lanzamiento por tiempo limitado.",
   },

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, type ComponentType } from "react"
+import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
 import {
@@ -10,7 +11,6 @@ import {
   UsersIcon,
 } from "lucide-react"
 
-import { ResultCard } from "@/components/common"
 import { Form, FormField } from "@/components/forms"
 import {
   Accordion,
@@ -21,7 +21,6 @@ import {
 import { Button } from "@/components/ui/button"
 import {
   calculateCost,
-  formatClp,
   type CostCalculatorResult,
 } from "@/features/calculadora-costos/calculate"
 import { CostCategoryList } from "@/features/calculadora-costos/cost-category-list"
@@ -33,8 +32,61 @@ import {
 } from "@/features/calculadora-costos/schema"
 import { cn } from "@/lib/utils"
 
+const PAYMENT_URL = "https://www.webpay.cl/form-pay/402692"
+
+/** While locked, the results report must never be mounted in the DOM. */
+const FREEMIUM_RESULTS_LOCKED = true
+
 const workspaceCardClass =
   "overflow-hidden rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-6 sm:px-8"
+
+function FreemiumUnlockGate() {
+  return (
+    <section
+      id="desbloqueo"
+      className="scroll-mt-24"
+      aria-live="polite"
+      aria-labelledby="desbloqueo-title"
+    >
+      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-6 py-8 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
+        <h2
+          id="desbloqueo-title"
+          className="font-heading text-2xl font-semibold tracking-tight text-heading sm:text-3xl"
+        >
+          🎉 ¡Tu cálculo está listo!
+        </h2>
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+          Ya analizamos toda la información que ingresaste.
+        </p>
+        <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
+          En segundos podrás descubrir:
+        </p>
+        <ul className="mx-auto mt-3 max-w-md space-y-2 text-left text-sm text-foreground sm:text-base">
+          <li>✓ ¿Cuánto realmente cuesta fabricar tu producto?</li>
+          <li>✓ ¿Cuál debería ser tu precio de venta?</li>
+          <li>✓ ¿Cuánta utilidad estás obteniendo?</li>
+          <li>✓ ¿Estás ganando o perdiendo dinero?</li>
+        </ul>
+        <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
+          Desbloquea tu informe completo por un único pago de:
+        </p>
+        <p className="mt-8 font-heading text-5xl font-bold tracking-tight text-heading tabular-nums sm:text-6xl">
+          $5.990 CLP
+        </p>
+        <div className="mt-8">
+          <Button
+            asChild
+            variant="primary"
+            size="lg"
+            className="h-14 w-full bg-[#2563EB] px-10 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:w-auto sm:min-w-[13rem]"
+          >
+            <Link href={PAYMENT_URL}>Desbloquear mi resultado</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  )
+}
 
 function SectionIcon({
   icon: Icon,
@@ -91,6 +143,7 @@ export function CostCalculatorForm() {
   const indirectCount = indirectItems?.length ?? 0
 
   function onSubmit(values: CostCalculatorValues) {
+    // Keep calculation intact for future paid unlock; never render these values while freemium is locked.
     setResult(calculateCost(values))
   }
 
@@ -100,6 +153,8 @@ export function CostCalculatorForm() {
     setOpenSection("materia-prima")
     form.setFocus("productName")
   }
+
+  const showUnlockGate = result !== null && FREEMIUM_RESULTS_LOCKED
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-16 sm:gap-20 lg:gap-24">
@@ -299,66 +354,8 @@ export function CostCalculatorForm() {
         </div>
       </Form>
 
-      {/* Resultado */}
-      {result ? (
-        <section className="scroll-mt-24" aria-live="polite">
-          <ResultCard
-            title={result.productName}
-            description="Resumen del cálculo de tu producto."
-            tone="success"
-            className="border border-[#E8EEF5] bg-brand-turquoise/[0.06] shadow-[0_2px_12px_rgb(15_44_76/0.04)]"
-          >
-            <div className="space-y-8 sm:space-y-10">
-              <div className="rounded-[18px] border border-brand-turquoise/20 bg-brand-turquoise/10 px-6 py-8 sm:px-10 sm:py-10">
-                <p className="text-xs font-medium tracking-wide text-brand-turquoise uppercase">
-                  Precio sugerido
-                </p>
-                <p className="mt-3 font-heading text-5xl font-bold tracking-tight text-brand-turquoise tabular-nums sm:text-6xl lg:text-7xl">
-                  {formatClp(result.finalSalePrice)}
-                </p>
-                <p className="mt-4 text-sm text-muted-foreground">
-                  Incluye IVA.
-                </p>
-              </div>
-
-              <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-                <div className="space-y-2 rounded-2xl border border-[#E8EEF5] bg-white px-4 py-5 sm:px-5 sm:py-6">
-                  <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    Producto
-                  </p>
-                  <p className="font-heading text-base font-semibold text-heading sm:text-lg">
-                    {result.productName}
-                  </p>
-                </div>
-                <div className="space-y-2 rounded-2xl border border-[#E8EEF5] bg-white px-4 py-5 sm:px-5 sm:py-6">
-                  <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    Costo real
-                  </p>
-                  <p className="font-heading text-xl font-semibold text-heading tabular-nums sm:text-2xl">
-                    {formatClp(result.totalCost)}
-                  </p>
-                </div>
-                <div className="space-y-2 rounded-2xl border border-[#E8EEF5] bg-white px-4 py-5 sm:px-5 sm:py-6">
-                  <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    Precio neto
-                  </p>
-                  <p className="font-heading text-xl font-semibold text-heading tabular-nums sm:text-2xl">
-                    {formatClp(result.netSalePrice)}
-                  </p>
-                </div>
-                <div className="space-y-2 rounded-2xl border border-[#E8EEF5] bg-white px-4 py-5 sm:px-5 sm:py-6">
-                  <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                    IVA (19%)
-                  </p>
-                  <p className="font-heading text-xl font-semibold text-heading tabular-nums sm:text-2xl">
-                    {formatClp(result.iva)}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </ResultCard>
-        </section>
-      ) : null}
+      {/* Freemium: unlock gate fully replaces the results report (no ResultCard, no calculated figures). */}
+      {showUnlockGate ? <FreemiumUnlockGate /> : null}
     </div>
   )
 }
