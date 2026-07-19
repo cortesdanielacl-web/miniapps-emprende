@@ -2,6 +2,7 @@ import Link from "next/link"
 
 import { BrandLogo } from "@/components/common/brand-logo"
 import { PageContainer } from "@/components/common/page-container"
+import { CALCULATOR_ENTRY_HREF } from "@/config/validation"
 import { cn } from "@/lib/utils"
 import { APP_NAME } from "@/lib/constants"
 
@@ -42,7 +43,7 @@ function Header({
           </span>
         </Link>
         <Link
-          href="/calculadora"
+          href={CALCULATOR_ENTRY_HREF}
           className="rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
         >
           Calculadora Inteligente

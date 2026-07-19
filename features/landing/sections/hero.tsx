@@ -27,6 +27,11 @@ export function LandingHero() {
               {content.description}
             </p>
             <div className="mt-8 sm:mt-10">
+              {content.cta.eyebrow ? (
+                <p className="mb-2 text-xs font-medium tracking-wide text-muted-foreground sm:text-sm">
+                  {content.cta.eyebrow}
+                </p>
+              ) : null}
               <Button
                 asChild
                 variant="primary"

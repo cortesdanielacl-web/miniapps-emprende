@@ -4,11 +4,16 @@ import { CheckIcon } from "lucide-react"
 import { PageContainer } from "@/components/common"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { VALIDATION_MODE } from "@/config/validation"
 import { landingContent } from "@/features/landing/content"
 
 const content = landingContent.pricing
 
 export function LandingPricing() {
+  if (VALIDATION_MODE) {
+    return null
+  }
+
   return (
     <section
       id={content.id}

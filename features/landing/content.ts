@@ -3,7 +3,10 @@
  * No modificar el copy aquí salvo por instrucción explícita de producto.
  */
 
-import { VALIDATION_MODE } from "@/config/validation"
+import {
+  CALCULATOR_ENTRY_HREF,
+  VALIDATION_MODE,
+} from "@/config/validation"
 
 export const landingContent = {
   hero: {
@@ -11,8 +14,13 @@ export const landingContent = {
     description:
       "Descubre el costo real de tus productos y obtén un precio de venta recomendado en menos de 5 minutos.",
     cta: {
-      label: "Calcular mi precio ahora",
-      href: VALIDATION_MODE ? "/calculadora-validacion" : "/calculadora",
+      label: VALIDATION_MODE
+        ? "Probar gratis (validación exclusiva)"
+        : "Calcular mi precio ahora",
+      href: CALCULATOR_ENTRY_HREF,
+      eyebrow: VALIDATION_MODE
+        ? "Acceso gratuito por tiempo limitado"
+        : null,
     },
   },
   problem: {
@@ -85,10 +93,10 @@ export const landingContent = {
     description: "Calcula el costo real de tus productos hoy mismo.",
     cta: {
       label: "Comenzar ahora.",
-      href: "/calculadora",
+      href: CALCULATOR_ENTRY_HREF,
     },
   },
   footer: {
     copyright: "© 2026 MiniApps Emprende",
   },
-} as const
+}
