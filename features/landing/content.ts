@@ -3,6 +3,8 @@
  * No modificar el copy aquí salvo por instrucción explícita de producto.
  */
 
+import { VALIDATION_MODE } from "@/config/validation"
+
 export const landingContent = {
   hero: {
     title: "¿Estás seguro de que ganas dinero con cada venta?",
@@ -10,7 +12,7 @@ export const landingContent = {
       "Descubre el costo real de tus productos y obtén un precio de venta recomendado en menos de 5 minutos.",
     cta: {
       label: "Calcular mi precio ahora",
-      href: "/calculadora",
+      href: VALIDATION_MODE ? "/calculadora-validacion" : "/calculadora",
     },
   },
   problem: {
