@@ -24,19 +24,19 @@ export function LandingBenefits() {
       title={content.title}
       className="pb-8 sm:pb-10 lg:pb-12"
     >
-      <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+      <ul className="grid gap-2.5 sm:grid-cols-2 sm:gap-4">
         {content.items.map((item, index) => {
           const Icon = benefitIcons[index]
 
           return (
             <li
               key={item}
-              className="flex items-start gap-3 rounded-2xl border border-border bg-card p-4 text-sm text-foreground shadow-[var(--shadow-card)] sm:gap-3.5 sm:p-5 sm:text-base"
+              className="flex items-start gap-2.5 rounded-2xl border border-border bg-card p-3.5 text-sm leading-snug text-foreground shadow-[var(--shadow-card)] sm:gap-3.5 sm:p-5 sm:text-base sm:leading-normal"
             >
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-brand-turquoise/12 text-brand-turquoise">
-                <Icon className="size-5" aria-hidden={true} />
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-2xl bg-brand-turquoise/12 text-brand-turquoise sm:size-10">
+                <Icon className="size-4 sm:size-5" aria-hidden={true} />
               </span>
-              <span className="pt-2">{item}</span>
+              <span className="min-w-0 pt-1.5 sm:pt-2">{item}</span>
             </li>
           )
         })}

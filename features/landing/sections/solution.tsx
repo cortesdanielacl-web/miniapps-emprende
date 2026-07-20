@@ -26,11 +26,11 @@ export function LandingSolution() {
     <section
       id={content.id}
       aria-labelledby={`${content.id}-title`}
-      className="border-y border-border bg-card py-12 sm:py-16 lg:py-20"
+      className="border-y border-border bg-card py-10 sm:py-16 lg:py-20"
     >
       <PageContainer size="xl">
-        <div className="grid items-center gap-8 sm:gap-10 lg:grid-cols-[1.2fr_0.95fr] lg:gap-x-5 xl:gap-x-6">
-          <div className="mx-auto flex w-full max-w-2xl items-center justify-center lg:max-w-none">
+        <div className="grid items-center gap-7 sm:gap-10 lg:grid-cols-[1.2fr_0.95fr] lg:gap-x-5 xl:gap-x-6">
+          <div className="mx-auto flex w-full max-w-md items-center justify-center sm:max-w-2xl lg:max-w-none">
             <Image
               src="/images/mockup1.png"
               alt="Calculadora Inteligente de Costos en un teléfono, lista para usar desde cualquier dispositivo"
@@ -44,18 +44,18 @@ export function LandingSolution() {
           <div className="max-w-xl">
             <h2
               id={`${content.id}-title`}
-              className="font-heading text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+              className="font-heading text-xl font-semibold tracking-tight text-foreground sm:text-3xl"
             >
               {content.title}
             </h2>
-            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+            <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground sm:mt-3 sm:text-base">
               {content.description}
             </p>
-            <ul className="mt-6 space-y-3 sm:mt-8">
+            <ul className="mt-5 space-y-2.5 sm:mt-8 sm:space-y-3">
               {content.checklist.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-3 text-sm text-foreground sm:text-base"
+                  className="flex items-start gap-2.5 text-sm text-foreground sm:gap-3 sm:text-base"
                 >
                   <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-brand-turquoise/12 text-brand-turquoise">
                     <CheckIcon className="size-3.5" aria-hidden={true} />
@@ -67,11 +67,11 @@ export function LandingSolution() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-4 sm:mt-12 sm:gap-5 lg:grid-cols-2 lg:gap-6">
+        <div className="mt-8 grid gap-3.5 sm:mt-12 sm:gap-5 lg:grid-cols-2 lg:gap-6">
           {screenshots.map((shot) => (
             <div
               key={shot.src}
-              className="overflow-hidden rounded-[18px] border border-border/80 bg-background shadow-[var(--shadow-card)]"
+              className="overflow-hidden rounded-[14px] border border-border/80 bg-background shadow-[var(--shadow-card)] sm:rounded-[18px]"
             >
               <Image
                 src={shot.src}

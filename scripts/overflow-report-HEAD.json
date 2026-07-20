@@ -1,0 +1,2286 @@
+{
+  "url": "http://localhost:3000",
+  "checkedAt": "2026-07-20T00:37:30.467Z",
+  "widths": [
+    320,
+    360,
+    375,
+    390,
+    430
+  ],
+  "height": 900,
+  "method": {
+    "waitUntil": "networkidle",
+    "waitImages": "complete (load or error)",
+    "scrollStep": 400,
+    "bboxThreshold": 0.5,
+    "scrollWidthThreshold": 1
+  },
+  "screenshots": {
+    "320": {
+      "path": "D:\\PROYECTOS\\miniapps-emprende\\scripts\\overflow-320.png",
+      "bytes": 458259,
+      "exists": true
+    },
+    "375": {
+      "path": "D:\\PROYECTOS\\miniapps-emprende\\scripts\\overflow-375.png",
+      "bytes": 503608,
+      "exists": true
+    }
+  },
+  "results": [
+    {
+      "viewportWidth": 320,
+      "viewportHeight": 900,
+      "documentElement": {
+        "scrollWidth": 475,
+        "clientWidth": 320,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 155
+      },
+      "body": {
+        "scrollWidth": 475,
+        "clientWidth": 320,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 155
+      },
+      "innerWidth": 320,
+      "scrollHeight": 3891,
+      "scrollPositionsChecked": [
+        0,
+        400,
+        800,
+        1200,
+        1600,
+        2000,
+        2400,
+        2800,
+        3200,
+        3600,
+        3891
+      ],
+      "overflowingElementCount": 23,
+      "overflowingElements": [
+        {
+          "tag": "html",
+          "id": "",
+          "classes": "poppins_fb95fc0b-module__j3Zrza__variable h-full antialiased",
+          "textContent": "MiniApps Emprende@font-face{font-family:'__nextjs-Geist';font-style:normal;font-",
+          "parentChain": [],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 900,
+            "width": 320,
+            "height": 900
+          },
+          "scrollWidth": 475,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "classes": "flex min-h-full flex-col font-sans",
+          "textContent": "Saltar al contenidoMiniApps EmprendeHerramientas simples para hacer crecer tu ne",
+          "parentChain": [
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 3890.5,
+            "width": 320,
+            "height": 3890.5
+          },
+          "scrollWidth": 475,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-pr",
+          "textContent": "Saltar al contenido",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "bbox+scroll",
+          "rect": {
+            "left": -1,
+            "right": 0,
+            "top": -1,
+            "bottom": 0,
+            "width": 1,
+            "height": 1
+          },
+          "scrollWidth": 151,
+          "clientWidth": 1,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "flex min-h-full flex-1 flex-col",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 3890.5,
+            "width": 320,
+            "height": 3890.5
+          },
+          "scrollWidth": 475,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "div.flex.min-h-full",
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 81,
+            "width": 320,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-5xl flex h-20 items-center justify-between gap-4 sm:h-[5.5rem]",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "header.sticky.top-0",
+            "div.flex.min-h-full",
+            "body.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 80,
+            "width": 320,
+            "height": 80
+          },
+          "scrollWidth": 475,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "group flex items-center gap-3.5 rounded-2xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:gap-4",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "header.sticky.top-0",
+            "div.flex.min-h-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 343.16,
+            "top": 12,
+            "bottom": 68,
+            "width": 327.16,
+            "height": 56
+          },
+          "scrollWidth": 327,
+          "clientWidth": 327,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "flex min-w-0 flex-col gap-0.5",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "a.group.flex",
+            "div.mx-auto.w-full",
+            "header.sticky.top-0"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 19,
+            "bottom": 61,
+            "width": 250.28,
+            "height": 42
+          },
+          "scrollWidth": 250,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "font-heading text-base font-semibold tracking-tight text-heading sm:text-lg",
+          "textContent": "MiniApps Emprende",
+          "parentChain": [
+            "span.flex.min-w-0",
+            "a.group.flex",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 19,
+            "bottom": 43,
+            "width": 250.28,
+            "height": 24
+          },
+          "scrollWidth": 250,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "truncate text-xs text-muted-foreground sm:text-sm",
+          "textContent": "Herramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "span.flex.min-w-0",
+            "a.group.flex",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "bbox+scroll",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 45,
+            "bottom": 61,
+            "width": 250.28,
+            "height": 16
+          },
+          "scrollWidth": 313,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "header.sticky.top-0",
+            "div.flex.min-h-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "scrollY": 0
+        },
+        {
+          "tag": "main",
+          "id": "main-content",
+          "classes": "flex-1",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "div.flex.min-h-full",
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 81,
+            "bottom": 3890.5,
+            "width": 320,
+            "height": 3809.5
+          },
+          "scrollWidth": 348,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "flex w-full flex-col",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "main#main-content.flex-1",
+            "div.flex.min-h-full",
+            "body.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 81,
+            "bottom": 3890.5,
+            "width": 320,
+            "height": 3809.5
+          },
+          "scrollWidth": 348,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "section",
+          "id": "hero",
+          "classes": "border-b border-border bg-card py-12 sm:py-16 lg:py-20",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "div.flex.w-full",
+            "main#main-content.flex-1",
+            "div.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 81,
+            "bottom": 691.27,
+            "width": 320,
+            "height": 610.27
+          },
+          "scrollWidth": 348,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-7xl",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "section#hero.border-b.border-border",
+            "div.flex.w-full",
+            "main#main-content.flex-1"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 129,
+            "bottom": 642.27,
+            "width": 320,
+            "height": 513.27
+          },
+          "scrollWidth": 348,
+          "clientWidth": 320,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-x-10 xl:gap-x-12",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "section#hero.border-b.border-border",
+            "div.flex.w-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 16,
+            "right": 304,
+            "top": 129,
+            "bottom": 642.27,
+            "width": 288,
+            "height": 513.27
+          },
+          "scrollWidth": 332,
+          "clientWidth": 288,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto max-w-xl text-center lg:mx-0 lg:text-left",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "div.grid.items-center",
+            "div.mx-auto.w-full",
+            "section#hero.border-b.border-border"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 129,
+            "bottom": 429,
+            "width": 331.63,
+            "height": 300
+          },
+          "scrollWidth": 332,
+          "clientWidth": 332,
+          "scrollY": 0
+        },
+        {
+          "tag": "h1",
+          "id": "hero-title",
+          "classes": "font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?",
+          "parentChain": [
+            "div.mx-auto.max-w-xl",
+            "div.grid.items-center",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 129,
+            "bottom": 237,
+            "width": 331.63,
+            "height": 108
+          },
+          "scrollWidth": 332,
+          "clientWidth": 332,
+          "scrollY": 0
+        },
+        {
+          "tag": "p",
+          "id": "",
+          "classes": "mx-auto mt-4 max-w-2xl text-base text-muted-foreground sm:mt-5 sm:text-lg lg:mx-0",
+          "textContent": "Descubre el costo real de tus productos y obtén un precio de venta recomendado e",
+          "parentChain": [
+            "div.mx-auto.max-w-xl",
+            "div.grid.items-center",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 253,
+            "bottom": 325,
+            "width": 331.63,
+            "height": 72
+          },
+          "scrollWidth": 332,
+          "clientWidth": 332,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mt-8 sm:mt-10",
+          "textContent": "Acceso gratuito por tiempo limitadoProbar gratis (validación exclusiva)",
+          "parentChain": [
+            "div.mx-auto.max-w-xl",
+            "div.grid.items-center",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 357,
+            "bottom": 429,
+            "width": 331.63,
+            "height": 72
+          },
+          "scrollWidth": 332,
+          "clientWidth": 332,
+          "scrollY": 0
+        },
+        {
+          "tag": "p",
+          "id": "",
+          "classes": "mb-2 text-xs font-medium tracking-wide text-muted-foreground sm:text-sm",
+          "textContent": "Acceso gratuito por tiempo limitado",
+          "parentChain": [
+            "div.mt-8.sm:mt-10",
+            "div.mx-auto.max-w-xl",
+            "div.grid.items-center"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 357,
+            "bottom": 373,
+            "width": 331.63,
+            "height": 16
+          },
+          "scrollWidth": 332,
+          "clientWidth": 332,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "group/button inline-flex shrink-0 items-center justify-center rounded-2xl border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all",
+          "textContent": "Probar gratis (validación exclusiva)",
+          "parentChain": [
+            "div.mt-8.sm:mt-10",
+            "div.mx-auto.max-w-xl",
+            "div.grid.items-center"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 381,
+            "bottom": 429,
+            "width": 331.63,
+            "height": 48
+          },
+          "scrollWidth": 330,
+          "clientWidth": 330,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto flex w-full max-w-xl items-center justify-center lg:max-w-none",
+          "textContent": "",
+          "parentChain": [
+            "div.grid.items-center",
+            "div.mx-auto.w-full",
+            "section#hero.border-b.border-border"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 461,
+            "bottom": 642.27,
+            "width": 331.63,
+            "height": 181.27
+          },
+          "scrollWidth": 332,
+          "clientWidth": 332,
+          "scrollY": 0
+        }
+      ],
+      "specificChecks": [
+        {
+          "name": "header[data-slot=header]",
+          "present": true,
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "rect": {
+            "left": 0,
+            "right": 320,
+            "top": 0,
+            "bottom": 81,
+            "width": 320,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 320,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "#hero img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-[82%] rounded-[16px] object-contain shadow-[var(--shadow-card)]",
+          "textContent": "",
+          "rect": {
+            "left": 45.84,
+            "right": 317.77,
+            "top": 461,
+            "bottom": 642.27,
+            "width": 271.92,
+            "height": 181.27
+          },
+          "scrollWidth": 272,
+          "clientWidth": 272,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 272,
+          "naturalHeight": 181,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fhero.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 16,
+            "right": 304,
+            "top": 1699.02,
+            "bottom": 1891,
+            "width": 288,
+            "height": 191.98
+          },
+          "scrollWidth": 288,
+          "clientWidth": 288,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 320,
+          "naturalHeight": 213,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup1.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 303,
+            "top": 2248,
+            "bottom": 2536.97,
+            "width": 286,
+            "height": 288.97
+          },
+          "scrollWidth": 286,
+          "clientWidth": 286,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 320,
+          "naturalHeight": 323,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup3.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 303,
+            "top": 2554.97,
+            "bottom": 2906.5,
+            "width": 286,
+            "height": 351.53
+          },
+          "scrollWidth": 286,
+          "clientWidth": 286,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 320,
+          "naturalHeight": 393,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup2.png&w=384&q=75"
+        },
+        {
+          "name": "button/a \"Probar gratis\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "group/button inline-flex shrink-0 items-center justify-center rounded-2xl border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all",
+          "textContent": "Probar gratis (validación exclusiva)",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 381,
+            "bottom": 429,
+            "width": 331.63,
+            "height": 48
+          },
+          "scrollWidth": 330,
+          "clientWidth": 330,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "header a \"Calculadora\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        }
+      ]
+    },
+    {
+      "viewportWidth": 360,
+      "viewportHeight": 900,
+      "documentElement": {
+        "scrollWidth": 475,
+        "clientWidth": 360,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 115
+      },
+      "body": {
+        "scrollWidth": 475,
+        "clientWidth": 360,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 115
+      },
+      "innerWidth": 360,
+      "scrollHeight": 3825,
+      "scrollPositionsChecked": [
+        0,
+        400,
+        800,
+        1200,
+        1600,
+        2000,
+        2400,
+        2800,
+        3200,
+        3600,
+        3825
+      ],
+      "overflowingElementCount": 9,
+      "overflowingElements": [
+        {
+          "tag": "html",
+          "id": "",
+          "classes": "poppins_fb95fc0b-module__j3Zrza__variable h-full antialiased",
+          "textContent": "MiniApps Emprende@font-face{font-family:'__nextjs-Geist';font-style:normal;font-",
+          "parentChain": [],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 900,
+            "width": 360,
+            "height": 900
+          },
+          "scrollWidth": 475,
+          "clientWidth": 360,
+          "scrollY": 0
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "classes": "flex min-h-full flex-col font-sans",
+          "textContent": "Saltar al contenidoMiniApps EmprendeHerramientas simples para hacer crecer tu ne",
+          "parentChain": [
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 3824.53,
+            "width": 360,
+            "height": 3824.53
+          },
+          "scrollWidth": 475,
+          "clientWidth": 360,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-pr",
+          "textContent": "Saltar al contenido",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "bbox+scroll",
+          "rect": {
+            "left": -1,
+            "right": 0,
+            "top": -1,
+            "bottom": 0,
+            "width": 1,
+            "height": 1
+          },
+          "scrollWidth": 151,
+          "clientWidth": 1,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "flex min-h-full flex-1 flex-col",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 3824.53,
+            "width": 360,
+            "height": 3824.53
+          },
+          "scrollWidth": 475,
+          "clientWidth": 360,
+          "scrollY": 0
+        },
+        {
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "div.flex.min-h-full",
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 81,
+            "width": 360,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 360,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-5xl flex h-20 items-center justify-between gap-4 sm:h-[5.5rem]",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "header.sticky.top-0",
+            "div.flex.min-h-full",
+            "body.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 80,
+            "width": 360,
+            "height": 80
+          },
+          "scrollWidth": 475,
+          "clientWidth": 360,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "truncate text-xs text-muted-foreground sm:text-sm",
+          "textContent": "Herramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "span.flex.min-w-0",
+            "a.group.flex",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 45,
+            "bottom": 61,
+            "width": 250.28,
+            "height": 16
+          },
+          "scrollWidth": 313,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "header.sticky.top-0",
+            "div.flex.min-h-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "grid items-center gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-x-10 xl:gap-x-12",
+          "textContent": "¿Estás seguro de que ganas dinero con cada venta?Descubre el costo real de tus p",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "section#hero.border-b.border-border",
+            "div.flex.w-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 16,
+            "right": 344,
+            "top": 129,
+            "bottom": 642.28,
+            "width": 328,
+            "height": 513.28
+          },
+          "scrollWidth": 332,
+          "clientWidth": 328,
+          "scrollY": 0
+        }
+      ],
+      "specificChecks": [
+        {
+          "name": "header[data-slot=header]",
+          "present": true,
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "rect": {
+            "left": 0,
+            "right": 360,
+            "top": 0,
+            "bottom": 81,
+            "width": 360,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 360,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "#hero img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-[82%] rounded-[16px] object-contain shadow-[var(--shadow-card)]",
+          "textContent": "",
+          "rect": {
+            "left": 45.84,
+            "right": 317.77,
+            "top": 461,
+            "bottom": 642.28,
+            "width": 271.92,
+            "height": 181.28
+          },
+          "scrollWidth": 272,
+          "clientWidth": 272,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 306,
+          "naturalHeight": 204,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fhero.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 16,
+            "right": 344,
+            "top": 1556.78,
+            "bottom": 1775.44,
+            "width": 328,
+            "height": 218.66
+          },
+          "scrollWidth": 328,
+          "clientWidth": 328,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 359,
+          "naturalHeight": 239,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup1.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 343,
+            "top": 2132.44,
+            "bottom": 2461.83,
+            "width": 326,
+            "height": 329.39
+          },
+          "scrollWidth": 326,
+          "clientWidth": 326,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 359,
+          "naturalHeight": 363,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup3.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 343,
+            "top": 2479.83,
+            "bottom": 2880.53,
+            "width": 326,
+            "height": 400.7
+          },
+          "scrollWidth": 326,
+          "clientWidth": 326,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 359,
+          "naturalHeight": 442,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup2.png&w=384&q=75"
+        },
+        {
+          "name": "button/a \"Probar gratis\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "group/button inline-flex shrink-0 items-center justify-center rounded-2xl border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all",
+          "textContent": "Probar gratis (validación exclusiva)",
+          "rect": {
+            "left": 16,
+            "right": 347.63,
+            "top": 381,
+            "bottom": 429,
+            "width": 331.63,
+            "height": 48
+          },
+          "scrollWidth": 330,
+          "clientWidth": 330,
+          "computedOverflowX": "visible",
+          "overflowsViewport": false,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "header a \"Calculadora\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        }
+      ]
+    },
+    {
+      "viewportWidth": 375,
+      "viewportHeight": 900,
+      "documentElement": {
+        "scrollWidth": 475,
+        "clientWidth": 375,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 100
+      },
+      "body": {
+        "scrollWidth": 475,
+        "clientWidth": 375,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 100
+      },
+      "innerWidth": 375,
+      "scrollHeight": 3874,
+      "scrollPositionsChecked": [
+        0,
+        400,
+        800,
+        1200,
+        1600,
+        2000,
+        2400,
+        2800,
+        3200,
+        3600,
+        3874
+      ],
+      "overflowingElementCount": 8,
+      "overflowingElements": [
+        {
+          "tag": "html",
+          "id": "",
+          "classes": "poppins_fb95fc0b-module__j3Zrza__variable h-full antialiased",
+          "textContent": "MiniApps Emprende@font-face{font-family:'__nextjs-Geist';font-style:normal;font-",
+          "parentChain": [],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 900,
+            "width": 375,
+            "height": 900
+          },
+          "scrollWidth": 475,
+          "clientWidth": 375,
+          "scrollY": 0
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "classes": "flex min-h-full flex-col font-sans",
+          "textContent": "Saltar al contenidoMiniApps EmprendeHerramientas simples para hacer crecer tu ne",
+          "parentChain": [
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 3874.34,
+            "width": 375,
+            "height": 3874.34
+          },
+          "scrollWidth": 475,
+          "clientWidth": 375,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-pr",
+          "textContent": "Saltar al contenido",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "bbox+scroll",
+          "rect": {
+            "left": -1,
+            "right": 0,
+            "top": -1,
+            "bottom": 0,
+            "width": 1,
+            "height": 1
+          },
+          "scrollWidth": 151,
+          "clientWidth": 1,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "flex min-h-full flex-1 flex-col",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 3874.34,
+            "width": 375,
+            "height": 3874.34
+          },
+          "scrollWidth": 475,
+          "clientWidth": 375,
+          "scrollY": 0
+        },
+        {
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "div.flex.min-h-full",
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 81,
+            "width": 375,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 375,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-5xl flex h-20 items-center justify-between gap-4 sm:h-[5.5rem]",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "header.sticky.top-0",
+            "div.flex.min-h-full",
+            "body.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 80,
+            "width": 375,
+            "height": 80
+          },
+          "scrollWidth": 475,
+          "clientWidth": 375,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "truncate text-xs text-muted-foreground sm:text-sm",
+          "textContent": "Herramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "span.flex.min-w-0",
+            "a.group.flex",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 45,
+            "bottom": 61,
+            "width": 250.28,
+            "height": 16
+          },
+          "scrollWidth": 313,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "header.sticky.top-0",
+            "div.flex.min-h-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "scrollY": 0
+        }
+      ],
+      "specificChecks": [
+        {
+          "name": "header[data-slot=header]",
+          "present": true,
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "rect": {
+            "left": 0,
+            "right": 375,
+            "top": 0,
+            "bottom": 81,
+            "width": 375,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 375,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "#hero img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-[82%] rounded-[16px] object-contain shadow-[var(--shadow-card)]",
+          "textContent": "",
+          "rect": {
+            "left": 46.88,
+            "right": 328.13,
+            "top": 461,
+            "bottom": 648.5,
+            "width": 281.25,
+            "height": 187.5
+          },
+          "scrollWidth": 281,
+          "clientWidth": 281,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 318,
+          "naturalHeight": 212,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fhero.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 16,
+            "right": 359,
+            "top": 1563,
+            "bottom": 1791.66,
+            "width": 343,
+            "height": 228.66
+          },
+          "scrollWidth": 343,
+          "clientWidth": 343,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 374,
+          "naturalHeight": 249,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup1.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 358,
+            "top": 2148.66,
+            "bottom": 2493.2,
+            "width": 341,
+            "height": 344.55
+          },
+          "scrollWidth": 341,
+          "clientWidth": 341,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 374,
+          "naturalHeight": 378,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup3.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 358,
+            "top": 2511.2,
+            "bottom": 2930.34,
+            "width": 341,
+            "height": 419.14
+          },
+          "scrollWidth": 341,
+          "clientWidth": 341,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 374,
+          "naturalHeight": 460,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup2.png&w=384&q=75"
+        },
+        {
+          "name": "button/a \"Probar gratis\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "group/button inline-flex shrink-0 items-center justify-center rounded-2xl border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all",
+          "textContent": "Probar gratis (validación exclusiva)",
+          "rect": {
+            "left": 16,
+            "right": 359,
+            "top": 381,
+            "bottom": 429,
+            "width": 343,
+            "height": 48
+          },
+          "scrollWidth": 341,
+          "clientWidth": 341,
+          "computedOverflowX": "visible",
+          "overflowsViewport": false,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "header a \"Calculadora\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        }
+      ]
+    },
+    {
+      "viewportWidth": 390,
+      "viewportHeight": 900,
+      "documentElement": {
+        "scrollWidth": 475,
+        "clientWidth": 390,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 85
+      },
+      "body": {
+        "scrollWidth": 475,
+        "clientWidth": 390,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 85
+      },
+      "innerWidth": 390,
+      "scrollHeight": 3907,
+      "scrollPositionsChecked": [
+        0,
+        400,
+        800,
+        1200,
+        1600,
+        2000,
+        2400,
+        2800,
+        3200,
+        3600,
+        3907
+      ],
+      "overflowingElementCount": 8,
+      "overflowingElements": [
+        {
+          "tag": "html",
+          "id": "",
+          "classes": "poppins_fb95fc0b-module__j3Zrza__variable h-full antialiased",
+          "textContent": "MiniApps Emprende@font-face{font-family:'__nextjs-Geist';font-style:normal;font-",
+          "parentChain": [],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 900,
+            "width": 390,
+            "height": 900
+          },
+          "scrollWidth": 475,
+          "clientWidth": 390,
+          "scrollY": 0
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "classes": "flex min-h-full flex-col font-sans",
+          "textContent": "Saltar al contenidoMiniApps EmprendeHerramientas simples para hacer crecer tu ne",
+          "parentChain": [
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 3906.69,
+            "width": 390,
+            "height": 3906.69
+          },
+          "scrollWidth": 475,
+          "clientWidth": 390,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-pr",
+          "textContent": "Saltar al contenido",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "bbox+scroll",
+          "rect": {
+            "left": -1,
+            "right": 0,
+            "top": -1,
+            "bottom": 0,
+            "width": 1,
+            "height": 1
+          },
+          "scrollWidth": 151,
+          "clientWidth": 1,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "flex min-h-full flex-1 flex-col",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 3906.69,
+            "width": 390,
+            "height": 3906.69
+          },
+          "scrollWidth": 475,
+          "clientWidth": 390,
+          "scrollY": 0
+        },
+        {
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "div.flex.min-h-full",
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 81,
+            "width": 390,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 390,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-5xl flex h-20 items-center justify-between gap-4 sm:h-[5.5rem]",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "header.sticky.top-0",
+            "div.flex.min-h-full",
+            "body.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 80,
+            "width": 390,
+            "height": 80
+          },
+          "scrollWidth": 475,
+          "clientWidth": 390,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "truncate text-xs text-muted-foreground sm:text-sm",
+          "textContent": "Herramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "span.flex.min-w-0",
+            "a.group.flex",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 45,
+            "bottom": 61,
+            "width": 250.28,
+            "height": 16
+          },
+          "scrollWidth": 313,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "header.sticky.top-0",
+            "div.flex.min-h-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "scrollY": 0
+        }
+      ],
+      "specificChecks": [
+        {
+          "name": "header[data-slot=header]",
+          "present": true,
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "rect": {
+            "left": 0,
+            "right": 390,
+            "top": 0,
+            "bottom": 81,
+            "width": 390,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 390,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "#hero img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-[82%] rounded-[16px] object-contain shadow-[var(--shadow-card)]",
+          "textContent": "",
+          "rect": {
+            "left": 48.22,
+            "right": 341.77,
+            "top": 461,
+            "bottom": 656.69,
+            "width": 293.55,
+            "height": 195.69
+          },
+          "scrollWidth": 294,
+          "clientWidth": 294,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 331,
+          "naturalHeight": 220,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fhero.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 16,
+            "right": 374,
+            "top": 1571.19,
+            "bottom": 1810.03,
+            "width": 358,
+            "height": 238.84
+          },
+          "scrollWidth": 358,
+          "clientWidth": 358,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 390,
+          "naturalHeight": 260,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup1.png&w=640&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 373,
+            "top": 2167.03,
+            "bottom": 2526.92,
+            "width": 356,
+            "height": 359.89
+          },
+          "scrollWidth": 356,
+          "clientWidth": 356,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 390,
+          "naturalHeight": 394,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup3.png&w=640&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 373,
+            "top": 2544.92,
+            "bottom": 2982.69,
+            "width": 356,
+            "height": 437.77
+          },
+          "scrollWidth": 356,
+          "clientWidth": 356,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 390,
+          "naturalHeight": 479,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup2.png&w=640&q=75"
+        },
+        {
+          "name": "button/a \"Probar gratis\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "group/button inline-flex shrink-0 items-center justify-center rounded-2xl border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all",
+          "textContent": "Probar gratis (validación exclusiva)",
+          "rect": {
+            "left": 16,
+            "right": 374,
+            "top": 381,
+            "bottom": 429,
+            "width": 358,
+            "height": 48
+          },
+          "scrollWidth": 356,
+          "clientWidth": 356,
+          "computedOverflowX": "visible",
+          "overflowsViewport": false,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "header a \"Calculadora\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        }
+      ]
+    },
+    {
+      "viewportWidth": 430,
+      "viewportHeight": 900,
+      "documentElement": {
+        "scrollWidth": 475,
+        "clientWidth": 430,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 45
+      },
+      "body": {
+        "scrollWidth": 475,
+        "clientWidth": 430,
+        "overflowX": "visible",
+        "overflow": "visible",
+        "hasHorizontalOverflow": true,
+        "overflowAmount": 45
+      },
+      "innerWidth": 430,
+      "scrollHeight": 3985,
+      "scrollPositionsChecked": [
+        0,
+        400,
+        800,
+        1200,
+        1600,
+        2000,
+        2400,
+        2800,
+        3200,
+        3600,
+        3985
+      ],
+      "overflowingElementCount": 8,
+      "overflowingElements": [
+        {
+          "tag": "html",
+          "id": "",
+          "classes": "poppins_fb95fc0b-module__j3Zrza__variable h-full antialiased",
+          "textContent": "MiniApps Emprende@font-face{font-family:'__nextjs-Geist';font-style:normal;font-",
+          "parentChain": [],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 430,
+            "top": 0,
+            "bottom": 900,
+            "width": 430,
+            "height": 900
+          },
+          "scrollWidth": 475,
+          "clientWidth": 430,
+          "scrollY": 0
+        },
+        {
+          "tag": "body",
+          "id": "",
+          "classes": "flex min-h-full flex-col font-sans",
+          "textContent": "Saltar al contenidoMiniApps EmprendeHerramientas simples para hacer crecer tu ne",
+          "parentChain": [
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 430,
+            "top": 0,
+            "bottom": 3984.88,
+            "width": 430,
+            "height": 3984.88
+          },
+          "scrollWidth": 475,
+          "clientWidth": 430,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:text-pr",
+          "textContent": "Saltar al contenido",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "bbox+scroll",
+          "rect": {
+            "left": -1,
+            "right": 0,
+            "top": -1,
+            "bottom": 0,
+            "width": 1,
+            "height": 1
+          },
+          "scrollWidth": 151,
+          "clientWidth": 1,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "flex min-h-full flex-1 flex-col",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 430,
+            "top": 0,
+            "bottom": 3984.88,
+            "width": 430,
+            "height": 3984.88
+          },
+          "scrollWidth": 475,
+          "clientWidth": 430,
+          "scrollY": 0
+        },
+        {
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "div.flex.min-h-full",
+            "body.flex.min-h-full",
+            "html.poppins_fb95fc0b-module__j3Zrza__variable.h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 430,
+            "top": 0,
+            "bottom": 81,
+            "width": 430,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 430,
+          "scrollY": 0
+        },
+        {
+          "tag": "div",
+          "id": "",
+          "classes": "mx-auto w-full px-4 sm:px-6 lg:px-8 max-w-5xl flex h-20 items-center justify-between gap-4 sm:h-[5.5rem]",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "parentChain": [
+            "header.sticky.top-0",
+            "div.flex.min-h-full",
+            "body.flex.min-h-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 0,
+            "right": 430,
+            "top": 0,
+            "bottom": 80,
+            "width": 430,
+            "height": 80
+          },
+          "scrollWidth": 475,
+          "clientWidth": 430,
+          "scrollY": 0
+        },
+        {
+          "tag": "span",
+          "id": "",
+          "classes": "truncate text-xs text-muted-foreground sm:text-sm",
+          "textContent": "Herramientas simples para hacer crecer tu negocio.",
+          "parentChain": [
+            "span.flex.min-w-0",
+            "a.group.flex",
+            "div.mx-auto.w-full"
+          ],
+          "reason": "scroll",
+          "rect": {
+            "left": 92.88,
+            "right": 343.16,
+            "top": 45,
+            "bottom": 61,
+            "width": 250.28,
+            "height": 16
+          },
+          "scrollWidth": 313,
+          "clientWidth": 250,
+          "scrollY": 0
+        },
+        {
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "parentChain": [
+            "div.mx-auto.w-full",
+            "header.sticky.top-0",
+            "div.flex.min-h-full"
+          ],
+          "reason": "bbox",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "scrollY": 0
+        }
+      ],
+      "specificChecks": [
+        {
+          "name": "header[data-slot=header]",
+          "present": true,
+          "tag": "header",
+          "id": "",
+          "classes": "sticky top-0 z-40 border-b border-border/70 bg-card/90 backdrop-blur-md",
+          "textContent": "MiniApps EmprendeHerramientas simples para hacer crecer tu negocio.Calculadora I",
+          "rect": {
+            "left": 0,
+            "right": 430,
+            "top": 0,
+            "bottom": 81,
+            "width": 430,
+            "height": 81
+          },
+          "scrollWidth": 475,
+          "clientWidth": 430,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "#hero img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-[82%] rounded-[16px] object-contain shadow-[var(--shadow-card)]",
+          "textContent": "",
+          "rect": {
+            "left": 51.81,
+            "right": 378.17,
+            "top": 461,
+            "bottom": 678.56,
+            "width": 326.36,
+            "height": 217.56
+          },
+          "scrollWidth": 326,
+          "clientWidth": 326,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 365,
+          "naturalHeight": 243,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fhero.png&w=384&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 16,
+            "right": 414,
+            "top": 1593.06,
+            "bottom": 1858.59,
+            "width": 398,
+            "height": 265.53
+          },
+          "scrollWidth": 398,
+          "clientWidth": 398,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 430,
+          "naturalHeight": 286,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup1.png&w=640&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 413,
+            "top": 2195.59,
+            "bottom": 2595.92,
+            "width": 396,
+            "height": 400.33
+          },
+          "scrollWidth": 396,
+          "clientWidth": 396,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 430,
+          "naturalHeight": 434,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup3.png&w=640&q=75"
+        },
+        {
+          "name": "#solucion img",
+          "present": true,
+          "tag": "img",
+          "id": "",
+          "classes": "h-auto w-full object-contain",
+          "textContent": "",
+          "rect": {
+            "left": 17,
+            "right": 413,
+            "top": 2613.92,
+            "bottom": 3100.88,
+            "width": 396,
+            "height": 486.95
+          },
+          "scrollWidth": 396,
+          "clientWidth": 396,
+          "computedOverflowX": "clip",
+          "overflowsViewport": false,
+          "naturalWidth": 430,
+          "naturalHeight": 528,
+          "currentSrc": "http://localhost:3000/_next/image?url=%2Fimages%2Fmockup2.png&w=640&q=75"
+        },
+        {
+          "name": "button/a \"Probar gratis\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "group/button inline-flex shrink-0 items-center justify-center rounded-2xl border border-transparent bg-clip-padding font-medium whitespace-nowrap transition-all",
+          "textContent": "Probar gratis (validación exclusiva)",
+          "rect": {
+            "left": 16,
+            "right": 414,
+            "top": 381,
+            "bottom": 429,
+            "width": 398,
+            "height": 48
+          },
+          "scrollWidth": 396,
+          "clientWidth": 396,
+          "computedOverflowX": "visible",
+          "overflowsViewport": false,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        },
+        {
+          "name": "header a \"Calculadora\"",
+          "present": true,
+          "tag": "a",
+          "id": "",
+          "classes": "rounded-xl px-3.5 py-2 text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-n",
+          "textContent": "Calculadora Inteligente",
+          "rect": {
+            "left": 359.16,
+            "right": 475.14,
+            "top": 12,
+            "bottom": 68,
+            "width": 115.98,
+            "height": 56
+          },
+          "scrollWidth": 116,
+          "clientWidth": 116,
+          "computedOverflowX": "visible",
+          "overflowsViewport": true,
+          "naturalWidth": null,
+          "naturalHeight": null,
+          "currentSrc": null
+        }
+      ]
+    }
+  ]
+}

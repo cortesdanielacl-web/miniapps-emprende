@@ -29,7 +29,7 @@ function UsedCostCell({ index }: { index: number }) {
 
   return (
     <span
-      className="block font-heading text-base font-semibold text-heading tabular-nums"
+      className="block truncate font-heading text-sm font-semibold text-heading tabular-nums sm:text-base"
       aria-live="polite"
       title="Calculado automáticamente"
     >
@@ -90,17 +90,17 @@ export function RawMaterialsList() {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-6">
+    <div className="flex h-full min-h-0 flex-col gap-4 sm:gap-6">
       <div
         ref={scrollRef}
-        className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1"
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden pr-0.5 sm:space-y-5 sm:pr-1"
       >
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="rounded-2xl border border-[#E8EEF5] bg-white p-4 sm:p-5"
+            className="min-w-0 rounded-2xl border border-[#E8EEF5] bg-white p-3.5 sm:p-5"
           >
-            <div className="mb-5 flex items-start justify-between gap-3">
+            <div className="mb-4 flex items-start justify-between gap-3 sm:mb-5">
               <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 Insumo {index + 1}
               </p>
@@ -120,17 +120,17 @@ export function RawMaterialsList() {
               </Button>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-4">
-              <div className="sm:col-span-2 lg:col-span-4">
+            <div className="grid min-w-0 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-12">
+              <div className="min-w-0 sm:col-span-2 lg:col-span-4">
                 <FieldLabel>Nombre del insumo</FieldLabel>
                 <TableField
                   name={`rawMaterials.${index}.name`}
                   aria-label={`Insumo ${index + 1}`}
-                  placeholder="Ej. Harina, Tela, Filamento PLA, Madera, Papel, Tinta..."
+                  placeholder="Ej. Harina, Tela, Filamento PLA..."
                 />
               </div>
 
-              <div className="lg:col-span-3">
+              <div className="min-w-0 lg:col-span-3">
                 <FieldLabel>Precio compra</FieldLabel>
                 <TableField
                   name={`rawMaterials.${index}.purchasePrice`}
@@ -140,9 +140,9 @@ export function RawMaterialsList() {
                 />
               </div>
 
-              <div className="lg:col-span-5">
+              <div className="min-w-0 lg:col-span-5">
                 <FieldLabel>Cantidad compra</FieldLabel>
-                <div className="flex items-center gap-1.5">
+                <div className="flex min-w-0 items-center gap-1.5">
                   <TableField
                     name={`rawMaterials.${index}.purchaseQuantity`}
                     aria-label={`Cantidad comprada ${index + 1}`}
@@ -157,9 +157,9 @@ export function RawMaterialsList() {
                 </div>
               </div>
 
-              <div className="lg:col-span-5">
+              <div className="min-w-0 lg:col-span-5">
                 <FieldLabel>Cantidad usada</FieldLabel>
-                <div className="flex items-center gap-1.5">
+                <div className="flex min-w-0 items-center gap-1.5">
                   <TableField
                     name={`rawMaterials.${index}.usedQuantity`}
                     aria-label={`Cantidad usada ${index + 1}`}
@@ -174,9 +174,9 @@ export function RawMaterialsList() {
                 </div>
               </div>
 
-              <div className="flex flex-col justify-end lg:col-span-3">
+              <div className="flex min-w-0 flex-col justify-end lg:col-span-3">
                 <FieldLabel>Costo utilizado</FieldLabel>
-                <div className="flex h-10 items-center">
+                <div className="flex h-11 min-w-0 items-center sm:h-10">
                   <UsedCostCell index={index} />
                 </div>
               </div>
@@ -185,7 +185,7 @@ export function RawMaterialsList() {
         ))}
       </div>
 
-      <div className="flex shrink-0 flex-col gap-4 border-t border-[#E8EEF5] pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex shrink-0 flex-col gap-3 border-t border-[#E8EEF5] pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-5">
         <Button
           type="button"
           variant="outline"
@@ -195,7 +195,7 @@ export function RawMaterialsList() {
           <PlusIcon className="size-4" aria-hidden="true" />
           Agregar insumo
         </Button>
-        <p className="text-sm font-medium tabular-nums sm:text-right">
+        <p className="min-w-0 text-sm font-medium leading-snug tabular-nums sm:text-right sm:leading-normal">
           <span className="text-muted-foreground">Total Materiales e Insumos </span>
           <span className="font-heading text-base font-semibold text-heading">
             {formatClp(total)}

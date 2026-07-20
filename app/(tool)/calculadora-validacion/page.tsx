@@ -22,8 +22,8 @@ export const metadata: Metadata = {
 export default function CalculadoraValidacionPage() {
   if (VALIDATION_MODE) {
     return (
-      <PageContainer size="xl" className="py-8 sm:py-10 lg:py-12">
-        <div className="rounded-[1.5rem] border border-[#E8EEF5] bg-white p-5 shadow-[0_2px_16px_rgb(15_44_76/0.04)] sm:rounded-[1.75rem] sm:p-8 lg:p-10">
+      <PageContainer size="xl" className="px-3 py-5 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+        <div className="rounded-[1.25rem] border border-[#E8EEF5] bg-white p-3.5 shadow-[0_2px_16px_rgb(15_44_76/0.04)] sm:rounded-[1.75rem] sm:p-8 lg:p-10">
           <CostCalculatorForm />
         </div>
       </PageContainer>
@@ -33,21 +33,21 @@ export default function CalculadoraValidacionPage() {
   const paymentUrl = landingContent.pricing.cta.href
 
   return (
-    <PageContainer size="xl" className="py-8 sm:py-10 lg:py-12">
-      <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-8 text-center sm:gap-10">
-        <div className="space-y-4 sm:space-y-5">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-heading sm:text-4xl">
+    <PageContainer size="xl" className="px-3 py-5 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+      <div className="mx-auto flex w-full max-w-2xl flex-col items-center gap-6 text-center sm:gap-10">
+        <div className="space-y-3.5 sm:space-y-5">
+          <h1 className="font-heading text-[1.65rem] font-bold leading-tight tracking-tight text-heading sm:text-4xl sm:leading-normal">
             🚀 La etapa de validación ha finalizado
           </h1>
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-lg">
             Muchas gracias por haber participado en la validación exclusiva de
             la Calculadora Inteligente de Costos.
           </p>
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-lg">
             Gracias a los comentarios recibidos estamos realizando las últimas
             mejoras antes del lanzamiento oficial.
           </p>
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-lg">
             Si registraste tu correo durante la validación, recibirás un
             beneficio exclusivo cuando la herramienta esté disponible.
           </p>

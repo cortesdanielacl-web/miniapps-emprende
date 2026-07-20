@@ -21,6 +21,9 @@ export const landingContent = {
       eyebrow: VALIDATION_MODE
         ? "Acceso gratuito por tiempo limitado"
         : null,
+      note: VALIDATION_MODE
+        ? "Esta versión está disponible gratuitamente por tiempo limitado para recopilar opiniones y mejorar la herramienta."
+        : null,
     },
   },
   problem: {
@@ -92,8 +95,13 @@ export const landingContent = {
     title: "Deja de poner precios a ciegas.",
     description: "Calcula el costo real de tus productos hoy mismo.",
     cta: {
-      label: "Comenzar ahora.",
+      label: VALIDATION_MODE
+        ? "Probar gratis (validación exclusiva)"
+        : "Comenzar ahora.",
       href: CALCULATOR_ENTRY_HREF,
+      note: VALIDATION_MODE
+        ? "Esta versión está disponible gratuitamente por tiempo limitado para recopilar opiniones y mejorar la herramienta."
+        : null,
     },
   },
   footer: {

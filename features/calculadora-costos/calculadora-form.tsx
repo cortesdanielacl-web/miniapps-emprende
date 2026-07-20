@@ -38,7 +38,7 @@ const PAYMENT_URL = "https://www.webpay.cl/form-pay/402692"
 const FREEMIUM_RESULTS_LOCKED = true
 
 const workspaceCardClass =
-  "overflow-hidden rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-6 sm:px-8"
+  "overflow-hidden rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-4 sm:px-8"
 
 function FreemiumUnlockGate() {
   return (
@@ -48,37 +48,37 @@ function FreemiumUnlockGate() {
       aria-live="polite"
       aria-labelledby="desbloqueo-title"
     >
-      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-6 py-8 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
+      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
         <h2
           id="desbloqueo-title"
-          className="font-heading text-2xl font-semibold tracking-tight text-heading sm:text-3xl"
+          className="font-heading text-xl font-semibold tracking-tight text-heading sm:text-3xl"
         >
           🎉 ¡Tu cálculo está listo!
         </h2>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base">
           Ya analizamos toda la información que ingresaste.
         </p>
-        <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground sm:mt-5 sm:text-base">
           En segundos podrás descubrir:
         </p>
-        <ul className="mx-auto mt-3 max-w-md space-y-2 text-left text-sm text-foreground sm:text-base">
+        <ul className="mx-auto mt-3 max-w-md space-y-2 px-1 text-left text-sm leading-snug text-foreground sm:px-0 sm:text-base sm:leading-normal">
           <li>✓ ¿Cuánto realmente cuesta fabricar tu producto?</li>
           <li>✓ ¿Cuál debería ser tu precio de venta?</li>
           <li>✓ ¿Cuánta utilidad estás obteniendo?</li>
           <li>✓ ¿Estás ganando o perdiendo dinero?</li>
         </ul>
-        <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground sm:mt-5 sm:text-base">
           Desbloquea tu informe completo por un único pago de:
         </p>
-        <p className="mt-8 font-heading text-5xl font-bold tracking-tight text-heading tabular-nums sm:text-6xl">
+        <p className="mt-6 font-heading text-4xl font-bold tracking-tight text-heading tabular-nums sm:mt-8 sm:text-6xl">
           $5.990 CLP
         </p>
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           <Button
             asChild
             variant="primary"
             size="lg"
-            className="h-14 w-full bg-[#2563EB] px-10 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:w-auto sm:min-w-[13rem]"
+            className="h-auto min-h-14 w-full whitespace-normal bg-[#2563EB] px-4 py-3 text-sm font-semibold leading-snug shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:w-auto sm:min-w-[13rem] sm:whitespace-nowrap sm:px-10 sm:py-2.5 sm:text-base"
           >
             <Link href={PAYMENT_URL}>Desbloquear mi resultado</Link>
           </Button>
@@ -94,8 +94,8 @@ function SectionIcon({
   icon: ComponentType<{ className?: string; "aria-hidden"?: boolean }>
 }) {
   return (
-    <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-turquoise/12 text-brand-turquoise">
-      <Icon className="size-6" aria-hidden={true} />
+    <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-turquoise/12 text-brand-turquoise sm:size-12">
+      <Icon className="size-5 sm:size-6" aria-hidden={true} />
     </span>
   )
 }
@@ -157,36 +157,36 @@ export function CostCalculatorForm() {
   const showUnlockGate = result !== null && FREEMIUM_RESULTS_LOCKED
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-16 sm:gap-20 lg:gap-24">
+    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 sm:gap-20 lg:gap-24">
       {/* Hero */}
-      <header className="overflow-hidden rounded-[18px] bg-gradient-to-br from-[#2563EB] to-[#14B8A6] px-8 py-7 sm:px-12 sm:py-8 lg:px-14 lg:py-9">
-        <div className="max-w-2xl space-y-3 sm:space-y-4">
-          <h1 className="font-heading text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-[2.5rem] lg:leading-[1.15]">
+      <header className="overflow-hidden rounded-[18px] bg-gradient-to-br from-[#2563EB] to-[#14B8A6] px-5 py-6 sm:px-12 sm:py-8 lg:px-14 lg:py-9">
+        <div className="max-w-2xl space-y-2.5 sm:space-y-4">
+          <h1 className="font-heading text-[1.65rem] font-bold leading-tight tracking-tight text-white sm:text-4xl sm:leading-normal lg:text-[2.5rem] lg:leading-[1.15]">
             Calcula el precio correcto de tus productos.
           </h1>
-          <p className="max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
+          <p className="max-w-xl text-sm leading-relaxed text-white/90 sm:text-lg">
             Costo real, IVA y precio sugerido en minutos.
           </p>
         </div>
       </header>
 
-      <Form form={form} onSubmit={onSubmit} className="gap-12 sm:gap-16">
+      <Form form={form} onSubmit={onSubmit} className="gap-8 sm:gap-16">
         {/* Producto */}
-        <section className={cn(workspaceCardClass, "space-y-6 py-7 sm:py-8")}>
-          <div className="flex items-start gap-3.5">
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-brand-turquoise/12 text-brand-turquoise">
-              <TagIcon className="size-6" aria-hidden={true} />
+        <section className={cn(workspaceCardClass, "space-y-5 py-5 sm:space-y-6 sm:py-8")}>
+          <div className="flex items-start gap-3 sm:gap-3.5">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-turquoise/12 text-brand-turquoise sm:size-12">
+              <TagIcon className="size-5 sm:size-6" aria-hidden={true} />
             </span>
-            <div className="space-y-1.5">
-              <h2 className="font-heading text-lg font-semibold text-heading sm:text-xl">
+            <div className="min-w-0 space-y-1.5">
+              <h2 className="font-heading text-base font-semibold text-heading sm:text-xl">
                 Tu producto
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 Define qué vas a vender y el margen que deseas.
               </p>
             </div>
           </div>
-          <div className="grid max-w-md gap-6 sm:grid-cols-2 sm:gap-6">
+          <div className="grid max-w-md gap-5 sm:grid-cols-2 sm:gap-6">
             <FormField
               name="productName"
               label="Nombre del producto"
@@ -204,12 +204,12 @@ export function CostCalculatorForm() {
         </section>
 
         {/* Workspace */}
-        <section className="space-y-7 sm:space-y-9">
+        <section className="space-y-5 sm:space-y-9">
           <div className="space-y-1.5">
-            <h2 className="font-heading text-lg font-semibold text-heading sm:text-xl">
+            <h2 className="font-heading text-base font-semibold text-heading sm:text-xl">
               Construye tus costos
             </h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               Agrega cada pieza de tu producto, paso a paso.
             </p>
           </div>
@@ -219,7 +219,7 @@ export function CostCalculatorForm() {
             collapsible
             value={openSection}
             onValueChange={setOpenSection}
-            className="gap-6 sm:gap-7"
+            className="gap-4 sm:gap-7"
           >
             <AccordionItem
               value="materia-prima"
@@ -228,11 +228,11 @@ export function CostCalculatorForm() {
                 "border-t-[3px] border-t-brand-turquoise"
               )}
             >
-              <AccordionTrigger className="py-6 sm:py-7">
-                <span className="flex min-w-0 flex-1 items-center gap-4 pr-3">
+              <AccordionTrigger className="py-5 sm:py-7">
+                <span className="flex min-w-0 flex-1 items-center gap-3 pr-2 sm:gap-4 sm:pr-3">
                   <SectionIcon icon={PackageIcon} />
-                  <span className="flex min-w-0 flex-col gap-1.5 text-left">
-                    <span className="font-heading text-base font-semibold text-heading sm:text-lg">
+                  <span className="flex min-w-0 flex-col gap-1 text-left sm:gap-1.5">
+                    <span className="font-heading text-[0.95rem] font-semibold text-heading sm:text-lg">
                       Materiales e Insumos
                     </span>
                     <SectionCount
@@ -243,9 +243,9 @@ export function CostCalculatorForm() {
                   </span>
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="h-auto pb-7 sm:pb-9">
-                <div className="flex h-[32rem] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-6 sm:pt-7">
-                  <p className="mb-6 shrink-0 text-sm leading-relaxed text-muted-foreground">
+              <AccordionContent className="h-auto pb-5 sm:pb-9">
+                <div className="flex h-[min(28rem,65dvh)] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:h-[32rem] sm:pt-7">
+                  <p className="mb-4 shrink-0 text-sm leading-relaxed text-muted-foreground sm:mb-6">
                     Ejemplos: harina, madera, tela, filamento 3D, tinta, papel,
                     cera, resina, envases, pegamento, pintura, licencias
                     digitales.
@@ -264,20 +264,20 @@ export function CostCalculatorForm() {
                 "border-t-[3px] border-t-brand-turquoise"
               )}
             >
-              <AccordionTrigger className="py-6 sm:py-7">
-                <span className="flex min-w-0 flex-1 items-center gap-4 pr-3">
+              <AccordionTrigger className="py-5 sm:py-7">
+                <span className="flex min-w-0 flex-1 items-center gap-3 pr-2 sm:gap-4 sm:pr-3">
                   <SectionIcon icon={UsersIcon} />
-                  <span className="flex min-w-0 flex-col gap-1.5 text-left">
-                    <span className="font-heading text-base font-semibold text-heading sm:text-lg">
+                  <span className="flex min-w-0 flex-col gap-1 text-left sm:gap-1.5">
+                    <span className="font-heading text-[0.95rem] font-semibold text-heading sm:text-lg">
                       Mano de Obra
                     </span>
                     <SectionCount count={laborCount} />
                   </span>
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="h-auto pb-7 sm:pb-9">
-                <div className="flex h-[32rem] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-6 sm:pt-7">
-                  <p className="mb-6 shrink-0 text-sm leading-relaxed text-muted-foreground">
+              <AccordionContent className="h-auto pb-5 sm:pb-9">
+                <div className="flex h-[min(28rem,65dvh)] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:h-[32rem] sm:pt-7">
+                  <p className="mb-4 shrink-0 text-sm leading-relaxed text-muted-foreground sm:mb-6">
                     Ejemplos: preparación, fabricación, armado, decoración,
                     envasado, despacho.
                   </p>
@@ -301,20 +301,20 @@ export function CostCalculatorForm() {
                 "border-t-[3px] border-t-brand-turquoise"
               )}
             >
-              <AccordionTrigger className="py-6 sm:py-7">
-                <span className="flex min-w-0 flex-1 items-center gap-4 pr-3">
+              <AccordionTrigger className="py-5 sm:py-7">
+                <span className="flex min-w-0 flex-1 items-center gap-3 pr-2 sm:gap-4 sm:pr-3">
                   <SectionIcon icon={LightbulbIcon} />
-                  <span className="flex min-w-0 flex-col gap-1.5 text-left">
-                    <span className="font-heading text-base font-semibold text-heading sm:text-lg">
+                  <span className="flex min-w-0 flex-col gap-1 text-left sm:gap-1.5">
+                    <span className="font-heading text-[0.95rem] font-semibold text-heading sm:text-lg">
                       Costos Indirectos
                     </span>
                     <SectionCount count={indirectCount} />
                   </span>
                 </span>
               </AccordionTrigger>
-              <AccordionContent className="h-auto pb-7 sm:pb-9">
-                <div className="flex h-[32rem] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-6 sm:pt-7">
-                  <p className="mb-6 shrink-0 text-sm leading-relaxed text-muted-foreground">
+              <AccordionContent className="h-auto pb-5 sm:pb-9">
+                <div className="flex h-[min(28rem,65dvh)] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:h-[32rem] sm:pt-7">
+                  <p className="mb-4 shrink-0 text-sm leading-relaxed text-muted-foreground sm:mb-6">
                     Ejemplos: luz, agua, gas, arriendo, internet, etiquetas,
                     bolsas, transporte, comisiones.
                   </p>
@@ -333,12 +333,12 @@ export function CostCalculatorForm() {
           </Accordion>
         </section>
 
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4">
           <Button
             type="submit"
             variant="primary"
             size="lg"
-            className="h-14 w-full bg-[#2563EB] px-10 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:min-w-[13rem] sm:w-auto"
+            className="h-12 w-full bg-[#2563EB] px-6 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:min-w-[13rem] sm:w-auto sm:px-10"
           >
             Calcular
           </Button>
@@ -346,7 +346,7 @@ export function CostCalculatorForm() {
             type="button"
             variant="outline"
             size="lg"
-            className="w-full border-[#2563EB] bg-transparent text-[#2563EB] shadow-none hover:bg-[#2563EB]/5 hover:text-[#2563EB] sm:w-auto"
+            className="h-12 w-full border-[#2563EB] bg-transparent text-[#2563EB] shadow-none hover:bg-[#2563EB]/5 hover:text-[#2563EB] sm:h-14 sm:w-auto"
             onClick={handleNewCalculation}
           >
             Nuevo cálculo

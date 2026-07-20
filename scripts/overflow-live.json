@@ -1,0 +1,47 @@
+[
+  {
+    "w": 320,
+    "iw": 320,
+    "sw": 320,
+    "equal": true,
+    "overflowAmount": 0,
+    "count": 0,
+    "offenders": []
+  },
+  {
+    "w": 360,
+    "iw": 360,
+    "sw": 360,
+    "equal": true,
+    "overflowAmount": 0,
+    "count": 0,
+    "offenders": []
+  },
+  {
+    "w": 375,
+    "iw": 375,
+    "sw": 375,
+    "equal": true,
+    "overflowAmount": 0,
+    "count": 0,
+    "offenders": []
+  },
+  {
+    "w": 390,
+    "iw": 390,
+    "sw": 390,
+    "equal": true,
+    "overflowAmount": 0,
+    "count": 0,
+    "offenders": []
+  },
+  {
+    "w": 430,
+    "iw": 430,
+    "sw": 430,
+    "equal": true,
+    "overflowAmount": 0,
+    "count": 0,
+    "offenders": []
+  }
+]

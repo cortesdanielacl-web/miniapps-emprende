@@ -14,10 +14,10 @@ import { UNITS, type Unit } from "@/features/calculadora-costos/units"
 import { cn } from "@/lib/utils"
 
 const cellInputClass =
-  "h-10 min-w-0 max-w-full rounded-2xl border border-[#E8EEF5] px-2.5 text-sm md:text-sm"
+  "h-11 min-w-0 max-w-full rounded-2xl border border-[#E8EEF5] px-2.5 text-base sm:h-10 sm:text-sm"
 
 const cellSelectClass = cn(
-  "h-10 w-full min-w-[3.5rem] max-w-[5rem] rounded-2xl border border-[#E8EEF5] bg-card px-2 text-sm outline-none transition-all duration-200",
+  "h-11 w-full min-w-[3.25rem] max-w-[4.5rem] shrink-0 rounded-2xl border border-[#E8EEF5] bg-card px-1.5 text-base outline-none transition-all duration-200 sm:h-10 sm:min-w-[3.5rem] sm:max-w-[5rem] sm:px-2 sm:text-sm",
   "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30"
 )
 

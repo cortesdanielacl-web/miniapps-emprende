@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function CalculadoraPage() {
   return (
-    <PageContainer size="xl" className="py-8 sm:py-10 lg:py-12">
-      <div className="rounded-[1.5rem] border border-[#E8EEF5] bg-white p-5 shadow-[0_2px_16px_rgb(15_44_76/0.04)] sm:rounded-[1.75rem] sm:p-8 lg:p-10">
+    <PageContainer size="xl" className="px-3 py-5 sm:px-6 sm:py-10 lg:px-8 lg:py-12">
+      <div className="rounded-[1.25rem] border border-[#E8EEF5] bg-white p-3.5 shadow-[0_2px_16px_rgb(15_44_76/0.04)] sm:rounded-[1.75rem] sm:p-8 lg:p-10">
         <CostCalculatorForm />
       </div>
     </PageContainer>

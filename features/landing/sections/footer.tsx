@@ -8,7 +8,7 @@ export function LandingFooter() {
   return (
     <footer
       id="footer"
-      className="border-t border-border bg-card py-8 sm:py-10"
+      className="border-t border-border bg-card py-6 sm:py-10"
       aria-label="Pie de página"
     >
       <PageContainer size="xl">

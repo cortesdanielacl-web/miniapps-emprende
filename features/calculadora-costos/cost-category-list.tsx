@@ -94,17 +94,17 @@ export function CostCategoryList({
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-6">
+    <div className="flex h-full min-h-0 flex-col gap-4 sm:gap-6">
       <div
         ref={scrollRef}
-        className="min-h-0 flex-1 space-y-5 overflow-y-auto pr-1"
+        className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden pr-0.5 sm:space-y-5 sm:pr-1"
       >
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="rounded-2xl border border-[#E8EEF5] bg-white p-4 sm:p-5"
+            className="min-w-0 rounded-2xl border border-[#E8EEF5] bg-white p-3.5 sm:p-5"
           >
-            <div className="mb-5 flex items-start justify-between gap-3">
+            <div className="mb-4 flex items-start justify-between gap-3 sm:mb-5">
               <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 {nameHeader} {index + 1}
               </p>
@@ -124,8 +124,8 @@ export function CostCategoryList({
               </Button>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-[minmax(0,1fr)_7rem]">
-              <div>
+            <div className="grid min-w-0 gap-3.5 sm:grid-cols-[minmax(0,1fr)_7rem] sm:gap-5">
+              <div className="min-w-0">
                 <FieldLabel>{nameHeader}</FieldLabel>
                 <TableField
                   name={`${name}.${index}.name`}
@@ -133,7 +133,7 @@ export function CostCategoryList({
                   placeholder={namePlaceholder}
                 />
               </div>
-              <div>
+              <div className="min-w-0">
                 <FieldLabel>Costo</FieldLabel>
                 <TableField
                   name={`${name}.${index}.cost`}
@@ -147,7 +147,7 @@ export function CostCategoryList({
         ))}
       </div>
 
-      <div className="flex shrink-0 flex-col gap-4 border-t border-[#E8EEF5] pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex shrink-0 flex-col gap-3 border-t border-[#E8EEF5] pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:pt-5">
         <Button
           type="button"
           variant="outline"
@@ -157,7 +157,7 @@ export function CostCategoryList({
           <PlusIcon className="size-4" aria-hidden="true" />
           {addLabel}
         </Button>
-        <p className="text-sm font-medium tabular-nums sm:text-right">
+        <p className="min-w-0 text-sm font-medium leading-snug tabular-nums sm:text-right sm:leading-normal">
           <span className="text-muted-foreground">{totalLabel} </span>
           <span className="font-heading text-base font-semibold text-heading">
             {formatClp(total)}

@@ -1,0 +1,14 @@
+{
+  "url": "http://localhost:3000/",
+  "viewport": {
+    "width": 320,
+    "height": 900
+  },
+  "documentElement": {
+    "scrollWidth": 320,
+    "clientWidth": 320
+  },
+  "equal": true,
+  "count": 0,
+  "offenders": []
+}
