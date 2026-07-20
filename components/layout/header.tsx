@@ -27,14 +27,14 @@ function Header({
       )}
       {...props}
     >
-      <PageContainer className="flex flex-col gap-2 py-3 sm:h-[5.5rem] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0">
+      <PageContainer className="flex min-w-0 flex-col gap-1.5 px-3 py-3 sm:h-[5.5rem] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-0">
         <Link
           href="/"
-          className="group flex min-w-0 items-center gap-2.5 rounded-2xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:gap-4"
+          className="group flex min-h-11 min-w-0 items-center gap-2.5 rounded-2xl focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:gap-4"
         >
-          <BrandLogo size="md" className="h-10 w-auto sm:h-16" />
+          <BrandLogo size="md" className="h-10 w-auto shrink-0 sm:h-16" />
           <span className="flex min-w-0 flex-col gap-0.5">
-            <span className="font-heading text-sm font-semibold tracking-tight text-heading sm:truncate sm:text-lg">
+            <span className="font-heading text-sm font-semibold tracking-tight text-heading break-words sm:truncate sm:text-lg">
               {title}
             </span>
             <span className="hidden truncate text-xs text-muted-foreground sm:block sm:text-sm">
@@ -44,7 +44,7 @@ function Header({
         </Link>
         <Link
           href={CALCULATOR_ENTRY_HREF}
-          className="w-full whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:w-auto sm:px-3.5 sm:text-left sm:text-sm"
+          className="flex min-h-11 w-full items-center justify-center whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:w-auto sm:justify-start sm:px-3.5 sm:text-left"
         >
           <span className="sm:hidden">Calculadora</span>
           <span className="hidden sm:inline">Calculadora Inteligente</span>

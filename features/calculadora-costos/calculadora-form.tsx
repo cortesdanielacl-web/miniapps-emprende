@@ -11,6 +11,7 @@ import {
   UsersIcon,
 } from "lucide-react"
 
+import { ResultCard } from "@/components/common"
 import { Form, FormField } from "@/components/forms"
 import {
   Accordion,
@@ -21,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button"
 import {
   calculateCost,
+  formatClp,
+  formatMarginPercent,
   type CostCalculatorResult,
 } from "@/features/calculadora-costos/calculate"
 import { CostCategoryList } from "@/features/calculadora-costos/cost-category-list"
@@ -34,11 +37,19 @@ import { cn } from "@/lib/utils"
 
 const PAYMENT_URL = "https://www.webpay.cl/form-pay/402692"
 
-/** While locked, the results report must never be mounted in the DOM. */
+/** Commercial freemium: while locked, the results report must never be mounted. */
 const FREEMIUM_RESULTS_LOCKED = true
 
 const workspaceCardClass =
-  "overflow-hidden rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-4 sm:px-8"
+  "min-w-0 overflow-hidden rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-3 sm:px-8"
+
+type CostCalculatorFormProps = {
+  /**
+   * Validation flow: show the full report immediately (no payment gate).
+   * Commercial flow keeps the freemium unlock gate.
+   */
+  unlockResults?: boolean
+}
 
 function FreemiumUnlockGate() {
   return (
@@ -48,10 +59,10 @@ function FreemiumUnlockGate() {
       aria-live="polite"
       aria-labelledby="desbloqueo-title"
     >
-      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
+      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-3 py-7 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
         <h2
           id="desbloqueo-title"
-          className="font-heading text-xl font-semibold tracking-tight text-heading sm:text-3xl"
+          className="font-heading text-xl font-semibold tracking-tight text-heading break-words sm:text-3xl"
         >
           🎉 ¡Tu cálculo está listo!
         </h2>
@@ -61,7 +72,7 @@ function FreemiumUnlockGate() {
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground sm:mt-5 sm:text-base">
           En segundos podrás descubrir:
         </p>
-        <ul className="mx-auto mt-3 max-w-md space-y-2 px-1 text-left text-sm leading-snug text-foreground sm:px-0 sm:text-base sm:leading-normal">
+        <ul className="mx-auto mt-3 max-w-md space-y-2 px-0.5 text-left text-sm leading-snug text-foreground break-words sm:px-0 sm:text-base sm:leading-normal">
           <li>✓ ¿Cuánto realmente cuesta fabricar tu producto?</li>
           <li>✓ ¿Cuál debería ser tu precio de venta?</li>
           <li>✓ ¿Cuánta utilidad estás obteniendo?</li>
@@ -70,7 +81,7 @@ function FreemiumUnlockGate() {
         <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground sm:mt-5 sm:text-base">
           Desbloquea tu informe completo por un único pago de:
         </p>
-        <p className="mt-6 font-heading text-4xl font-bold tracking-tight text-heading tabular-nums sm:mt-8 sm:text-6xl">
+        <p className="mt-6 font-heading text-[2.25rem] font-bold tracking-tight text-heading tabular-nums sm:mt-8 sm:text-6xl">
           $5.990 CLP
         </p>
         <div className="mt-6 sm:mt-8">
@@ -81,6 +92,144 @@ function FreemiumUnlockGate() {
             className="h-auto min-h-14 w-full whitespace-normal bg-[#2563EB] px-4 py-3 text-sm font-semibold leading-snug shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:w-auto sm:min-w-[13rem] sm:whitespace-nowrap sm:px-10 sm:py-2.5 sm:text-base"
           >
             <Link href={PAYMENT_URL}>Desbloquear mi resultado</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function MetricTile({
+  label,
+  value,
+  emphasize = false,
+}: {
+  label: string
+  value: string
+  emphasize?: boolean
+}) {
+  return (
+    <div className="space-y-2 rounded-2xl border border-[#E8EEF5] bg-white px-4 py-5 sm:px-5 sm:py-6">
+      <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+        {label}
+      </p>
+      <p
+        className={cn(
+          "font-heading font-semibold text-heading tabular-nums break-words",
+          emphasize ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"
+        )}
+      >
+        {value}
+      </p>
+    </div>
+  )
+}
+
+function CalculatorResultsReport({ result }: { result: CostCalculatorResult }) {
+  const profit = result.netSalePrice - result.totalCost
+
+  return (
+    <section id="resultado" className="scroll-mt-24" aria-live="polite">
+      <ResultCard
+        title={result.productName}
+        description="Resumen del cálculo de tu producto."
+        tone="success"
+        className="border border-[#E8EEF5] bg-brand-turquoise/[0.06] shadow-[0_2px_12px_rgb(15_44_76/0.04)]"
+      >
+        <div className="space-y-8 sm:space-y-10">
+          <div className="rounded-[18px] border border-brand-turquoise/20 bg-brand-turquoise/10 px-6 py-8 sm:px-10 sm:py-10">
+            <p className="text-xs font-medium tracking-wide text-brand-turquoise uppercase">
+              Precio Final
+            </p>
+            <p className="mt-3 font-heading text-5xl font-bold tracking-tight text-brand-turquoise tabular-nums sm:text-6xl lg:text-7xl">
+              {formatClp(result.finalSalePrice)}
+            </p>
+            <p className="mt-4 text-sm text-muted-foreground">Incluye IVA.</p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+            <MetricTile
+              label="Costo de Materias Primas"
+              value={formatClp(result.rawMaterialsTotal)}
+            />
+            <MetricTile
+              label="Mano de Obra"
+              value={formatClp(result.laborTotal)}
+            />
+            <MetricTile
+              label="Costos Indirectos"
+              value={formatClp(result.indirectTotal)}
+            />
+            <MetricTile
+              label="Costo Total"
+              value={formatClp(result.totalCost)}
+              emphasize
+            />
+            <MetricTile
+              label="Margen"
+              value={formatMarginPercent(result.margin)}
+            />
+            <MetricTile label="Utilidad" value={formatClp(profit)} emphasize />
+            <MetricTile
+              label="Precio Neto"
+              value={formatClp(result.netSalePrice)}
+              emphasize
+            />
+            <MetricTile label="IVA (19%)" value={formatClp(result.iva)} />
+            <MetricTile
+              label="Precio Final"
+              value={formatClp(result.finalSalePrice)}
+              emphasize
+            />
+          </div>
+        </div>
+      </ResultCard>
+    </section>
+  )
+}
+
+const VALIDATION_FEEDBACK_FORM_URL =
+  "https://forms.gle/tUqMEzVfjPaQBCPs9"
+
+function ValidationFeedbackCard() {
+  return (
+    <section
+      id="validacion-feedback"
+      className="scroll-mt-24"
+      aria-labelledby="validacion-feedback-title"
+    >
+      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-3 py-7 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
+        <h2
+          id="validacion-feedback-title"
+          className="font-heading text-xl font-semibold tracking-tight text-heading break-words sm:text-3xl"
+        >
+          🎉 ¡Gracias por probar MiniApps Emprende!
+        </h2>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base">
+          Esta herramienta se encuentra en una etapa de validación.
+        </p>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
+          Tu opinión es muy importante para ayudarnos a mejorarla antes del
+          lanzamiento oficial.
+        </p>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
+          El formulario toma menos de 1 minuto y nos permitirá seguir
+          construyendo herramientas que realmente ayuden a los emprendedores.
+        </p>
+        <div className="mt-6 sm:mt-8">
+          <Button
+            asChild
+            variant="primary"
+            size="lg"
+            className="h-auto min-h-14 w-full whitespace-normal bg-[#2563EB] px-4 py-3 text-sm font-semibold leading-snug shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:w-auto sm:min-w-[13rem] sm:whitespace-nowrap sm:px-10 sm:py-2.5 sm:text-base"
+          >
+            <a
+              href={VALIDATION_FEEDBACK_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Enviar opinión
+            </a>
           </Button>
         </div>
       </div>
@@ -116,7 +265,9 @@ function SectionCount({
   )
 }
 
-export function CostCalculatorForm() {
+export function CostCalculatorForm({
+  unlockResults = false,
+}: CostCalculatorFormProps) {
   const [result, setResult] = useState<CostCalculatorResult | null>(null)
   const [openSection, setOpenSection] = useState("materia-prima")
 
@@ -143,7 +294,7 @@ export function CostCalculatorForm() {
   const indirectCount = indirectItems?.length ?? 0
 
   function onSubmit(values: CostCalculatorValues) {
-    // Keep calculation intact for future paid unlock; never render these values while freemium is locked.
+    // Keep calculation intact; commercial freemium still withholds rendering until unlock.
     setResult(calculateCost(values))
   }
 
@@ -154,14 +305,16 @@ export function CostCalculatorForm() {
     form.setFocus("productName")
   }
 
-  const showUnlockGate = result !== null && FREEMIUM_RESULTS_LOCKED
+  const resultsLocked = !unlockResults && FREEMIUM_RESULTS_LOCKED
+  const showUnlockGate = result !== null && resultsLocked
+  const showFullReport = result !== null && !resultsLocked
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 sm:gap-20 lg:gap-24">
+    <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-8 sm:gap-20 lg:gap-24">
       {/* Hero */}
-      <header className="overflow-hidden rounded-[18px] bg-gradient-to-br from-[#2563EB] to-[#14B8A6] px-5 py-6 sm:px-12 sm:py-8 lg:px-14 lg:py-9">
+      <header className="min-w-0 overflow-hidden rounded-[18px] bg-gradient-to-br from-[#2563EB] to-[#14B8A6] px-4 py-6 sm:px-12 sm:py-8 lg:px-14 lg:py-9">
         <div className="max-w-2xl space-y-2.5 sm:space-y-4">
-          <h1 className="font-heading text-[1.65rem] font-bold leading-tight tracking-tight text-white sm:text-4xl sm:leading-normal lg:text-[2.5rem] lg:leading-[1.15]">
+          <h1 className="font-heading text-[1.5rem] font-bold leading-tight tracking-tight text-white break-words sm:text-4xl sm:leading-normal lg:text-[2.5rem] lg:leading-[1.15]">
             Calcula el precio correcto de tus productos.
           </h1>
           <p className="max-w-xl text-sm leading-relaxed text-white/90 sm:text-lg">
@@ -228,11 +381,11 @@ export function CostCalculatorForm() {
                 "border-t-[3px] border-t-brand-turquoise"
               )}
             >
-              <AccordionTrigger className="py-5 sm:py-7">
-                <span className="flex min-w-0 flex-1 items-center gap-3 pr-2 sm:gap-4 sm:pr-3">
+              <AccordionTrigger className="gap-2 py-4 sm:gap-4 sm:py-7">
+                <span className="flex min-w-0 flex-1 items-center gap-2.5 pr-1 sm:gap-4 sm:pr-3">
                   <SectionIcon icon={PackageIcon} />
                   <span className="flex min-w-0 flex-col gap-1 text-left sm:gap-1.5">
-                    <span className="font-heading text-[0.95rem] font-semibold text-heading sm:text-lg">
+                    <span className="font-heading text-[0.95rem] font-semibold text-heading break-words sm:text-lg">
                       Materiales e Insumos
                     </span>
                     <SectionCount
@@ -244,13 +397,13 @@ export function CostCalculatorForm() {
                 </span>
               </AccordionTrigger>
               <AccordionContent className="h-auto pb-5 sm:pb-9">
-                <div className="flex h-[min(28rem,65dvh)] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:h-[32rem] sm:pt-7">
+                <div className="flex min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:pt-7">
                   <p className="mb-4 shrink-0 text-sm leading-relaxed text-muted-foreground sm:mb-6">
                     Ejemplos: harina, madera, tela, filamento 3D, tinta, papel,
                     cera, resina, envases, pegamento, pintura, licencias
                     digitales.
                   </p>
-                  <div className="min-h-0 flex-1 overflow-hidden">
+                  <div className="min-h-0 min-w-0">
                     <RawMaterialsList />
                   </div>
                 </div>
@@ -264,11 +417,11 @@ export function CostCalculatorForm() {
                 "border-t-[3px] border-t-brand-turquoise"
               )}
             >
-              <AccordionTrigger className="py-5 sm:py-7">
-                <span className="flex min-w-0 flex-1 items-center gap-3 pr-2 sm:gap-4 sm:pr-3">
+              <AccordionTrigger className="gap-2 py-4 sm:gap-4 sm:py-7">
+                <span className="flex min-w-0 flex-1 items-center gap-2.5 pr-1 sm:gap-4 sm:pr-3">
                   <SectionIcon icon={UsersIcon} />
                   <span className="flex min-w-0 flex-col gap-1 text-left sm:gap-1.5">
-                    <span className="font-heading text-[0.95rem] font-semibold text-heading sm:text-lg">
+                    <span className="font-heading text-[0.95rem] font-semibold text-heading break-words sm:text-lg">
                       Mano de Obra
                     </span>
                     <SectionCount count={laborCount} />
@@ -276,12 +429,12 @@ export function CostCalculatorForm() {
                 </span>
               </AccordionTrigger>
               <AccordionContent className="h-auto pb-5 sm:pb-9">
-                <div className="flex h-[min(28rem,65dvh)] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:h-[32rem] sm:pt-7">
+                <div className="flex min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:pt-7">
                   <p className="mb-4 shrink-0 text-sm leading-relaxed text-muted-foreground sm:mb-6">
                     Ejemplos: preparación, fabricación, armado, decoración,
                     envasado, despacho.
                   </p>
-                  <div className="min-h-0 flex-1 overflow-hidden">
+                  <div className="min-h-0 min-w-0">
                     <CostCategoryList
                       name="laborItems"
                       nameHeader="Tarea"
@@ -301,11 +454,11 @@ export function CostCalculatorForm() {
                 "border-t-[3px] border-t-brand-turquoise"
               )}
             >
-              <AccordionTrigger className="py-5 sm:py-7">
-                <span className="flex min-w-0 flex-1 items-center gap-3 pr-2 sm:gap-4 sm:pr-3">
+              <AccordionTrigger className="gap-2 py-4 sm:gap-4 sm:py-7">
+                <span className="flex min-w-0 flex-1 items-center gap-2.5 pr-1 sm:gap-4 sm:pr-3">
                   <SectionIcon icon={LightbulbIcon} />
                   <span className="flex min-w-0 flex-col gap-1 text-left sm:gap-1.5">
-                    <span className="font-heading text-[0.95rem] font-semibold text-heading sm:text-lg">
+                    <span className="font-heading text-[0.95rem] font-semibold text-heading break-words sm:text-lg">
                       Costos Indirectos
                     </span>
                     <SectionCount count={indirectCount} />
@@ -313,12 +466,12 @@ export function CostCalculatorForm() {
                 </span>
               </AccordionTrigger>
               <AccordionContent className="h-auto pb-5 sm:pb-9">
-                <div className="flex h-[min(28rem,65dvh)] min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:h-[32rem] sm:pt-7">
+                <div className="flex min-h-0 flex-col overflow-hidden border-t border-[#E8EEF5] pt-5 sm:pt-7">
                   <p className="mb-4 shrink-0 text-sm leading-relaxed text-muted-foreground sm:mb-6">
                     Ejemplos: luz, agua, gas, arriendo, internet, etiquetas,
                     bolsas, transporte, comisiones.
                   </p>
-                  <div className="min-h-0 flex-1 overflow-hidden">
+                  <div className="min-h-0 min-w-0">
                     <CostCategoryList
                       name="indirectItems"
                       nameHeader="Concepto"
@@ -333,12 +486,12 @@ export function CostCalculatorForm() {
           </Accordion>
         </section>
 
-        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4">
+        <div className="flex min-w-0 flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-4">
           <Button
             type="submit"
             variant="primary"
             size="lg"
-            className="h-12 w-full bg-[#2563EB] px-6 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:min-w-[13rem] sm:w-auto sm:px-10"
+            className="h-12 min-h-11 w-full bg-[#2563EB] px-6 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:min-w-[13rem] sm:w-auto sm:px-10"
           >
             Calcular
           </Button>
@@ -346,7 +499,7 @@ export function CostCalculatorForm() {
             type="button"
             variant="outline"
             size="lg"
-            className="h-12 w-full border-[#2563EB] bg-transparent text-[#2563EB] shadow-none hover:bg-[#2563EB]/5 hover:text-[#2563EB] sm:h-14 sm:w-auto"
+            className="h-12 min-h-11 w-full border-[#2563EB] bg-transparent text-[#2563EB] shadow-none hover:bg-[#2563EB]/5 hover:text-[#2563EB] sm:h-14 sm:w-auto"
             onClick={handleNewCalculation}
           >
             Nuevo cálculo
@@ -354,8 +507,14 @@ export function CostCalculatorForm() {
         </div>
       </Form>
 
-      {/* Freemium: unlock gate fully replaces the results report (no ResultCard, no calculated figures). */}
+      {/* Commercial freemium: unlock gate replaces the report. Validation: full report + feedback. */}
       {showUnlockGate ? <FreemiumUnlockGate /> : null}
+      {showFullReport && result ? (
+        <>
+          <CalculatorResultsReport result={result} />
+          {unlockResults ? <ValidationFeedbackCard /> : null}
+        </>
+      ) : null}
     </div>
   )
 }

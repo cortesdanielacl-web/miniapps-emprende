@@ -90,15 +90,15 @@ export function RawMaterialsList() {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 sm:gap-6">
+    <div className="flex min-h-0 flex-col gap-4 sm:gap-6">
       <div
         ref={scrollRef}
-        className="min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden pr-0.5 sm:space-y-5 sm:pr-1"
+        className="max-h-[min(18rem,45dvh)] min-h-0 space-y-4 overflow-y-auto overflow-x-hidden overscroll-contain pr-0.5 sm:max-h-[24rem] sm:space-y-5 sm:pr-1"
       >
         {fields.map((field, index) => (
           <div
             key={field.id}
-            className="min-w-0 rounded-2xl border border-[#E8EEF5] bg-white p-3.5 sm:p-5"
+            className="min-w-0 rounded-2xl border border-[#E8EEF5] bg-white p-3 sm:p-5"
           >
             <div className="mb-4 flex items-start justify-between gap-3 sm:mb-5">
               <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
@@ -107,8 +107,8 @@ export function RawMaterialsList() {
               <Button
                 type="button"
                 variant="ghost"
-                size="icon-sm"
-                className="shrink-0 text-muted-foreground hover:text-destructive"
+                size="icon"
+                className="size-11 shrink-0 text-muted-foreground hover:text-destructive"
                 onClick={() => handleRemoveIngredient(index)}
                 aria-label={
                   fields.length <= 1
@@ -189,13 +189,13 @@ export function RawMaterialsList() {
         <Button
           type="button"
           variant="outline"
-          className="w-full border-brand-turquoise bg-transparent text-brand-turquoise shadow-none hover:bg-brand-turquoise/12 hover:text-brand-turquoise sm:w-auto"
+          className="h-11 w-full border-brand-turquoise bg-transparent text-brand-turquoise shadow-none hover:bg-brand-turquoise/12 hover:text-brand-turquoise sm:w-auto"
           onClick={handleAddIngredient}
         >
           <PlusIcon className="size-4" aria-hidden="true" />
           Agregar insumo
         </Button>
-        <p className="min-w-0 text-sm font-medium leading-snug tabular-nums sm:text-right sm:leading-normal">
+        <p className="min-w-0 break-words text-sm font-medium leading-snug tabular-nums sm:text-right sm:leading-normal">
           <span className="text-muted-foreground">Total Materiales e Insumos </span>
           <span className="font-heading text-base font-semibold text-heading">
             {formatClp(total)}

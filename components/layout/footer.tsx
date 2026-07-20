@@ -22,9 +22,9 @@ function Footer({
       className={cn("mt-auto border-t border-border/70 bg-card/80", className)}
       {...props}
     >
-      <PageContainer className="flex flex-col items-center justify-between gap-2 py-8 text-center sm:flex-row sm:text-left">
-        <p className="text-sm text-muted-foreground">{text}</p>
-        <p className="text-xs text-muted-foreground">© {year}</p>
+      <PageContainer className="flex flex-col items-center justify-between gap-2 px-3 py-6 text-center sm:flex-row sm:px-6 sm:py-8 sm:text-left">
+        <p className="min-w-0 break-words text-sm text-muted-foreground">{text}</p>
+        <p className="shrink-0 text-xs text-muted-foreground">© {year}</p>
       </PageContainer>
     </footer>
   )
