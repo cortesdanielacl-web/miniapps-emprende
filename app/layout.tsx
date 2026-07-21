@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 
 import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants"
 
@@ -57,6 +58,7 @@ export default function RootLayout({
           Saltar al contenido
         </a>
         {children}
+        <Analytics />
       </body>
     </html>
   )

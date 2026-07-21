@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, type ComponentType } from "react"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
 import {
@@ -11,7 +10,6 @@ import {
   UsersIcon,
 } from "lucide-react"
 
-import { ResultCard } from "@/components/common"
 import { Form, FormField } from "@/components/forms"
 import {
   Accordion,
@@ -22,10 +20,9 @@ import {
 import { Button } from "@/components/ui/button"
 import {
   calculateCost,
-  formatClp,
-  formatMarginPercent,
   type CostCalculatorResult,
 } from "@/features/calculadora-costos/calculate"
+import { CalculatorResultsReport } from "@/features/calculadora-costos/calculator-results-report"
 import { CostCategoryList } from "@/features/calculadora-costos/cost-category-list"
 import { RawMaterialsList } from "@/features/calculadora-costos/raw-materials-list"
 import {
@@ -33,9 +30,8 @@ import {
   costCalculatorSchema,
   type CostCalculatorValues,
 } from "@/features/calculadora-costos/schema"
+import { createWebpayPayment } from "@/features/calculadora-costos/services/createWebpayPayment"
 import { cn } from "@/lib/utils"
-
-const PAYMENT_URL = "https://www.webpay.cl/form-pay/402692"
 
 /** Commercial freemium: while locked, the results report must never be mounted. */
 const FREEMIUM_RESULTS_LOCKED = true
@@ -51,7 +47,31 @@ type CostCalculatorFormProps = {
   unlockResults?: boolean
 }
 
-function FreemiumUnlockGate() {
+function FreemiumUnlockGate({
+  values,
+  result,
+}: {
+  values: CostCalculatorValues
+  result: CostCalculatorResult
+}) {
+  const [isPaying, setIsPaying] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  async function handleObtainProfessionalReport() {
+    setErrorMessage(null)
+    setIsPaying(true)
+
+    try {
+      await createWebpayPayment({ values, result })
+      // Redirección a Webpay; si falla el submit del form, rehabilitamos el botón.
+    } catch {
+      setErrorMessage(
+        "No pudimos iniciar el pago. Intenta nuevamente."
+      )
+      setIsPaying(false)
+    }
+  }
+
   return (
     <section
       id="desbloqueo"
@@ -86,104 +106,25 @@ function FreemiumUnlockGate() {
         </p>
         <div className="mt-6 sm:mt-8">
           <Button
-            asChild
+            type="button"
             variant="primary"
             size="lg"
+            disabled={isPaying}
+            onClick={handleObtainProfessionalReport}
             className="h-auto min-h-14 w-full whitespace-normal bg-[#2563EB] px-4 py-3 text-sm font-semibold leading-snug shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:w-auto sm:min-w-[13rem] sm:whitespace-nowrap sm:px-10 sm:py-2.5 sm:text-base"
           >
-            <Link href={PAYMENT_URL}>Desbloquear mi resultado</Link>
+            {isPaying ? "Procesando…" : "Obtener mi Informe Profesional"}
           </Button>
+          {errorMessage ? (
+            <p
+              role="alert"
+              className="mx-auto mt-3 max-w-md text-sm text-destructive"
+            >
+              {errorMessage}
+            </p>
+          ) : null}
         </div>
       </div>
-    </section>
-  )
-}
-
-function MetricTile({
-  label,
-  value,
-  emphasize = false,
-}: {
-  label: string
-  value: string
-  emphasize?: boolean
-}) {
-  return (
-    <div className="space-y-2 rounded-2xl border border-[#E8EEF5] bg-white px-4 py-5 sm:px-5 sm:py-6">
-      <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        {label}
-      </p>
-      <p
-        className={cn(
-          "font-heading font-semibold text-heading tabular-nums break-words",
-          emphasize ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"
-        )}
-      >
-        {value}
-      </p>
-    </div>
-  )
-}
-
-function CalculatorResultsReport({ result }: { result: CostCalculatorResult }) {
-  const profit = result.netSalePrice - result.totalCost
-
-  return (
-    <section id="resultado" className="scroll-mt-24" aria-live="polite">
-      <ResultCard
-        title={result.productName}
-        description="Resumen del cálculo de tu producto."
-        tone="success"
-        className="border border-[#E8EEF5] bg-brand-turquoise/[0.06] shadow-[0_2px_12px_rgb(15_44_76/0.04)]"
-      >
-        <div className="space-y-8 sm:space-y-10">
-          <div className="rounded-[18px] border border-brand-turquoise/20 bg-brand-turquoise/10 px-6 py-8 sm:px-10 sm:py-10">
-            <p className="text-xs font-medium tracking-wide text-brand-turquoise uppercase">
-              Precio Final
-            </p>
-            <p className="mt-3 font-heading text-5xl font-bold tracking-tight text-brand-turquoise tabular-nums sm:text-6xl lg:text-7xl">
-              {formatClp(result.finalSalePrice)}
-            </p>
-            <p className="mt-4 text-sm text-muted-foreground">Incluye IVA.</p>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-            <MetricTile
-              label="Costo de Materias Primas"
-              value={formatClp(result.rawMaterialsTotal)}
-            />
-            <MetricTile
-              label="Mano de Obra"
-              value={formatClp(result.laborTotal)}
-            />
-            <MetricTile
-              label="Costos Indirectos"
-              value={formatClp(result.indirectTotal)}
-            />
-            <MetricTile
-              label="Costo Total"
-              value={formatClp(result.totalCost)}
-              emphasize
-            />
-            <MetricTile
-              label="Margen"
-              value={formatMarginPercent(result.margin)}
-            />
-            <MetricTile label="Utilidad" value={formatClp(profit)} emphasize />
-            <MetricTile
-              label="Precio Neto"
-              value={formatClp(result.netSalePrice)}
-              emphasize
-            />
-            <MetricTile label="IVA (19%)" value={formatClp(result.iva)} />
-            <MetricTile
-              label="Precio Final"
-              value={formatClp(result.finalSalePrice)}
-              emphasize
-            />
-          </div>
-        </div>
-      </ResultCard>
     </section>
   )
 }
@@ -269,6 +210,8 @@ export function CostCalculatorForm({
   unlockResults = false,
 }: CostCalculatorFormProps) {
   const [result, setResult] = useState<CostCalculatorResult | null>(null)
+  const [calculatedValues, setCalculatedValues] =
+    useState<CostCalculatorValues | null>(null)
   const [openSection, setOpenSection] = useState("materia-prima")
 
   const form = useForm<CostCalculatorValues>({
@@ -295,18 +238,20 @@ export function CostCalculatorForm({
 
   function onSubmit(values: CostCalculatorValues) {
     // Keep calculation intact; commercial freemium still withholds rendering until unlock.
+    setCalculatedValues(values)
     setResult(calculateCost(values))
   }
 
   function handleNewCalculation() {
     form.reset(costCalculatorDefaultValues)
+    setCalculatedValues(null)
     setResult(null)
     setOpenSection("materia-prima")
     form.setFocus("productName")
   }
 
   const resultsLocked = !unlockResults && FREEMIUM_RESULTS_LOCKED
-  const showUnlockGate = result !== null && resultsLocked
+  const showUnlockGate = result !== null && calculatedValues !== null && resultsLocked
   const showFullReport = result !== null && !resultsLocked
 
   return (
@@ -508,7 +453,9 @@ export function CostCalculatorForm({
       </Form>
 
       {/* Commercial freemium: unlock gate replaces the report. Validation: full report + feedback. */}
-      {showUnlockGate ? <FreemiumUnlockGate /> : null}
+      {showUnlockGate && result && calculatedValues ? (
+        <FreemiumUnlockGate values={calculatedValues} result={result} />
+      ) : null}
       {showFullReport && result ? (
         <>
           <CalculatorResultsReport result={result} />
