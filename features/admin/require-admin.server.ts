@@ -28,6 +28,13 @@ export async function requireAdmin() {
   }
 
   const email = user.email.toLowerCase()
+  // TEMP: diagnóstico acceso admin — quitar tras verificar Vercel logs
+  console.log("[requireAdmin]", {
+    "user.email": user.email,
+    "process.env.ADMIN_EMAILS": process.env.ADMIN_EMAILS,
+    admins,
+    reason: admins.includes(email) ? null : "forbidden",
+  })
   if (!admins.includes(email)) {
     return { ok: false as const, reason: "forbidden" as const, user }
   }
