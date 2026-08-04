@@ -2,18 +2,13 @@ import { NextResponse } from "next/server"
 import { WebpayPlus } from "transbank-sdk"
 
 import { getConfirmationPath } from "@/config/commercial"
+import { pendingPurchaseService } from "@/features/pending-purchases/pending-purchase-service.server"
 
 /**
  * Webpay Plus — Commit (SDK oficial Transbank v6).
- * Docs: https://www.transbankdevelopers.cl/documentacion/webpay-plus
  *
- * Valida el pago con Transbank y redirige al único flujo postventa:
- * /compra/confirmacion (getConfirmationPath).
- *
- * Integración futura de licencias (no implementada aún):
- * tras commit aprobado → licenseService.activateLicenseFromPayment({
- *   targetUserId, productId, paymentReference: buyOrder
- * }) desde @/features/licensing/license-service.server
+ * Pago aprobado → registra pending_purchases (NO activa licencia)
+ * y notifica a SUPPORT_EMAIL. Luego redirige a /compra/confirmacion.
  */
 
 function getRequiredEnv(name: string): string {
@@ -49,14 +44,12 @@ function createWebpayTransaction() {
     : WebpayPlus.Transaction.buildForIntegration(commerceCode, apiKey)
 }
 
-/** Único destino postventa: /compra/confirmacion. */
 function redirectToConfirmation() {
   const appUrl = getRequiredEnv("APP_URL").replace(/\/$/, "")
   const destination = new URL(getConfirmationPath(), `${appUrl}/`)
   return NextResponse.redirect(destination, 303)
 }
 
-/** Redirige a confirmación; si falta APP_URL, responde JSON controlado. */
 function safeRedirectToConfirmation() {
   try {
     return redirectToConfirmation()
@@ -121,7 +114,6 @@ async function handleCommit(request: Request) {
     return safeRedirectToConfirmation()
   }
 
-  // Cancelación en Webpay (TBK_TOKEN) o retorno sin token_ws.
   if (!params.tokenWs) {
     return safeRedirectToConfirmation()
   }
@@ -145,7 +137,27 @@ async function handleCommit(request: Request) {
     const commitResponse = await transaction.commit(params.tokenWs)
     const approved = isApprovedCommit(commitResponse, expectedAmount)
 
-    if (!approved) {
+    if (approved) {
+      const buyOrder =
+        typeof commitResponse.buy_order === "string"
+          ? commitResponse.buy_order
+          : ""
+      const amount = Number(commitResponse.amount)
+
+      if (buyOrder) {
+        await pendingPurchaseService.registerApprovedWebpayPayment({
+          buyOrder,
+          transactionToken: params.tokenWs,
+          amount: Number.isFinite(amount) ? amount : expectedAmount,
+          paymentDate:
+            typeof commitResponse.transaction_date === "string"
+              ? commitResponse.transaction_date
+              : undefined,
+        })
+      } else {
+        console.error("[webpay/commit] approved but missing buy_order")
+      }
+    } else {
       console.error("[webpay/commit] payment not authorized", {
         status: commitResponse.status,
         response_code: commitResponse.response_code,

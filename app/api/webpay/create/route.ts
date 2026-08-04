@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server"
 import { WebpayPlus } from "transbank-sdk"
 
+import { COMMERCIAL } from "@/config/commercial"
 import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
+import { getCurrentUser } from "@/features/auth/session.server"
+import { pendingPurchaseService } from "@/features/pending-purchases/pending-purchase-service.server"
 
 /**
  * Webpay Plus — Create (SDK oficial Transbank v6).
@@ -106,6 +109,14 @@ function createWebpayTransaction() {
 }
 
 export async function POST(request: Request) {
+  const user = await getCurrentUser()
+  if (!user?.id || !user.email) {
+    return NextResponse.json(
+      { error: "Debes iniciar sesión para iniciar el pago." },
+      { status: 401 }
+    )
+  }
+
   let body: CreateBody
 
   try {
@@ -152,6 +163,23 @@ export async function POST(request: Request) {
   if (sessionId.length > SESSION_ID_MAX) {
     return NextResponse.json(
       { error: "No se pudo generar un session_id válido" },
+      { status: 500 }
+    )
+  }
+
+  try {
+    await pendingPurchaseService.saveWebpayIntent({
+      buyOrder,
+      userId: user.id,
+      email: user.email,
+      customerName: user.name,
+      product: COMMERCIAL.productName,
+      amount: webpay.amount,
+    })
+  } catch (error) {
+    console.error("[webpay/create] intent persist error:", error)
+    return NextResponse.json(
+      { error: "No se pudo preparar la compra pendiente." },
       { status: 500 }
     )
   }

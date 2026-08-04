@@ -12,6 +12,7 @@ import { COMPANY, getSupportEmailHref } from "@/config/company"
 import { CALCULATOR_ENTRY_HREF } from "@/config/routes"
 import { useAuth } from "@/features/auth/use-auth"
 import { premiumAccessService } from "@/features/licensing/premium-access-service"
+import { registerPendingPurchaseFromCheckoutAction } from "@/features/pending-purchases/actions"
 import { cn } from "@/lib/utils"
 
 type LicenseUiStatus = "pending" | "active"
@@ -83,6 +84,12 @@ export function PurchaseConfirmationView() {
           await premiumAccessService.hasPremiumAccess(COMMERCIAL.productId)
         if (!cancelled) {
           setStatus(hasAccess ? "active" : "pending")
+        }
+
+        // Link de Pago / retorno postventa: registrar pending sin auto-activar.
+        if (isAuthenticated && !hasAccess) {
+          // Registra pending (Link de Pago). Webpay Plus ya lo hace en commit.
+          await registerPendingPurchaseFromCheckoutAction()
         }
       } finally {
         if (!cancelled) {

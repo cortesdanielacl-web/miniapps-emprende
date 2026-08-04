@@ -10,7 +10,11 @@ import {
 import { getSupabaseEnv } from "@/lib/supabase/env"
 
 function isProtectedPage(pathname: string): boolean {
-  return pathname.startsWith("/calculadora")
+  return (
+    pathname.startsWith("/calculadora") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/backoffice")
+  )
 }
 
 function isPremiumApi(pathname: string): boolean {

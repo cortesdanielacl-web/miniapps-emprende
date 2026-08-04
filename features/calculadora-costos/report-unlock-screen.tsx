@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { ShieldCheckIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -164,7 +165,36 @@ export function ReportUnlockScreen({
             Pago seguro mediante Transbank Webpay.
           </p>
 
-          <div className="mt-7 sm:mt-8">
+          <div className="mx-auto mt-6 max-w-md rounded-[14px] border border-[#E8EEF5] bg-[#F7FAFF] px-4 py-4 text-left sm:mt-7 sm:px-5 sm:py-5">
+            <div className="flex gap-3">
+              <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-turquoise/12 text-brand-turquoise">
+                <ShieldCheckIcon className="size-4" aria-hidden={true} />
+              </span>
+              <div className="min-w-0 space-y-2">
+                <p className="text-sm font-semibold text-heading sm:text-[0.95rem]">
+                  Pago seguro con Transbank
+                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  MiniApps Emprende es un producto desarrollado por Bebidas
+                  Artesanales FUCOR.
+                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  Por este motivo, el pago será procesado por Transbank y el
+                  comercio aparecerá identificado como{" "}
+                  <span className="font-semibold text-foreground">
+                    Bebidas Artesanales FUCOR
+                  </span>
+                  .
+                </p>
+                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  Tu licencia de MiniApps Emprende será activada una vez
+                  confirmado el pago.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 sm:mt-7">
             <Button
               type="button"
               variant="primary"
