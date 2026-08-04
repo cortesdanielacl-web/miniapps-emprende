@@ -226,9 +226,9 @@ async function measureAtViewport(page, width) {
         } else {
           for (const el of els) out.push(measureEl(el, c.name));
         }
-      } else if (c.findKind === 'probar') {
+      } else if (c.findKind === 'comenzar') {
         const nodes = [...document.querySelectorAll('button, a')].filter((el) =>
-          (el.textContent || '').includes('Probar gratis')
+          (el.textContent || '').includes('Crear cuenta gratis')
         );
         if (nodes.length === 0) out.push({ name: c.name, present: false });
         else for (const el of nodes) out.push(measureEl(el, c.name));
@@ -245,7 +245,7 @@ async function measureAtViewport(page, width) {
     { name: 'header[data-slot=header]', selector: 'header[data-slot="header"]' },
     { name: '#hero img', selector: '#hero img' },
     { name: '#solucion img', selector: '#solucion img' },
-    { name: 'button/a "Probar gratis"', findKind: 'probar' },
+    { name: 'button/a "Crear cuenta gratis"', findKind: 'comenzar' },
     { name: 'header a "Calculadora"', findKind: 'calculadora' },
   ]);
 

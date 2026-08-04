@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 
+import { AuthProvider } from "@/features/auth/auth-provider"
 import { APP_DESCRIPTION, APP_NAME } from "@/lib/constants"
 
 import "./globals.css"
@@ -57,8 +58,10 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
-        {children}
-        <Analytics />
+        <AuthProvider>
+          {children}
+          <Analytics />
+        </AuthProvider>
       </body>
     </html>
   )

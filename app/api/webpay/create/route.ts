@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { WebpayPlus } from "transbank-sdk"
 
-import type { CostCalculatorResult } from "@/features/calculadora-costos/calculate"
 import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
 
 /**
@@ -11,6 +10,10 @@ import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
  *
  * Crea la transacción a partir del estado actual de la calculadora
  * (sin persistencia en Supabase).
+ * Tras el commit, el retorno postventa es siempre /compra/confirmacion.
+ *
+ * El checkout comercial activo hoy es Link de Pago (report-checkout).
+ * Este endpoint queda para integración Webpay Plus.
  *
  * Patrón recomendado:
  *   WebpayPlus.Transaction.buildForIntegration|buildForProduction(commerceCode, apiKey)
@@ -25,7 +28,6 @@ const RETURN_URL_MAX = 256
 
 type CreateBody = {
   values?: unknown
-  result?: unknown
 }
 
 function getRequiredEnv(name: string): string {
@@ -40,19 +42,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
-function isFiniteNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value)
-}
-
 /**
- * Valida que el body traiga el snapshot del cálculo listo para pagar.
- * No recalcula: solo exige la forma mínima del estado actual de la UI.
+ * Valida inputs del formulario (nunca resultados premium del cliente).
+ * El monto de cobro sale de REPORT_PRICE, no del cálculo.
  */
-function parseCalculatorSnapshot(body: CreateBody): {
-  values: CostCalculatorValues
-  result: CostCalculatorResult
-} | null {
-  if (!isRecord(body.values) || !isRecord(body.result)) {
+function parseCheckoutValues(body: CreateBody): CostCalculatorValues | null {
+  if (!isRecord(body.values)) {
     return null
   }
 
@@ -74,26 +69,7 @@ function parseCalculatorSnapshot(body: CreateBody): {
     return null
   }
 
-  const result = body.result
-  if (
-    typeof result.productName !== "string" ||
-    !result.productName.trim() ||
-    !isFiniteNumber(result.rawMaterialsTotal) ||
-    !isFiniteNumber(result.laborTotal) ||
-    !isFiniteNumber(result.indirectTotal) ||
-    !isFiniteNumber(result.totalCost) ||
-    !isFiniteNumber(result.margin) ||
-    !isFiniteNumber(result.netSalePrice) ||
-    !isFiniteNumber(result.iva) ||
-    !isFiniteNumber(result.finalSalePrice)
-  ) {
-    return null
-  }
-
-  return {
-    values: body.values as CostCalculatorValues,
-    result: result as CostCalculatorResult,
-  }
+  return body.values as CostCalculatorValues
 }
 
 function createWebpayTransaction() {
@@ -141,9 +117,9 @@ export async function POST(request: Request) {
     )
   }
 
-  const snapshot = parseCalculatorSnapshot(body)
+  const values = parseCheckoutValues(body)
 
-  if (!snapshot) {
+  if (!values) {
     return NextResponse.json(
       { error: "El estado del cálculo es inválido o incompleto" },
       { status: 400 }
@@ -205,14 +181,12 @@ export async function POST(request: Request) {
     )
   }
 
-  // El snapshot viaja de vuelta al cliente para persistirlo en sessionStorage
-  // antes del redirect (sin base de datos en este flujo).
   return NextResponse.json({
     url,
     token,
     buyOrder,
     paymentId,
     sessionId,
-    productName: snapshot.result.productName,
+    productName: values.productName.trim(),
   })
 }

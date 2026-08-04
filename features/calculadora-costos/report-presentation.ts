@@ -1,8 +1,8 @@
 import {
   formatClp,
   formatMarginPercent,
-  type CostCalculatorResult,
-} from "@/features/calculadora-costos/calculate"
+} from "@/features/calculadora-costos/format-money"
+import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
 
 export type ReportMetric = {
   label: string
@@ -11,9 +11,8 @@ export type ReportMetric = {
 }
 
 /**
- * Vista de presentación del Informe Profesional.
- * Única fuente de etiquetas y valores formateados para Web y PDF.
- * No recalcula: solo deriva utilidad y formatea campos de CostCalculatorResult.
+ * Vista de presentación del Informe Profesional (web).
+ * Solo a partir de ProfessionalReport autorizado por la API.
  */
 export type ProfessionalReportView = {
   productName: string
@@ -26,74 +25,67 @@ export type ProfessionalReportView = {
 }
 
 export function buildProfessionalReportView(
-  result: CostCalculatorResult
+  report: ProfessionalReport
 ): ProfessionalReportView {
-  const profit = result.netSalePrice - result.totalCost
-
   return {
-    productName: result.productName,
+    productName: report.productName,
     description: "Resumen del cálculo de tu producto.",
     reportTitle: "Informe Profesional de Costos",
     finalSalePriceLabel: "Precio Final",
-    finalSalePrice: formatClp(result.finalSalePrice),
+    finalSalePrice: formatClp(report.finalSalePrice),
     finalSalePriceNote: "Incluye IVA.",
     metrics: [
       {
         label: "Costo de Materias Primas",
-        value: formatClp(result.rawMaterialsTotal),
+        value: formatClp(report.rawMaterialsTotal),
       },
       {
         label: "Mano de Obra",
-        value: formatClp(result.laborTotal),
+        value: formatClp(report.laborTotal),
       },
       {
         label: "Costos Indirectos",
-        value: formatClp(result.indirectTotal),
+        value: formatClp(report.indirectTotal),
       },
       {
         label: "Costo Total",
-        value: formatClp(result.totalCost),
+        value: formatClp(report.totalCost),
         emphasize: true,
       },
       {
         label: "Margen",
-        value: formatMarginPercent(result.margin),
+        value: formatMarginPercent(report.margin),
       },
       {
         label: "Utilidad",
-        value: formatClp(profit),
+        value: formatClp(report.profit),
         emphasize: true,
       },
       {
+        label: "Rentabilidad",
+        value: formatMarginPercent(
+          Math.round(report.profitability * 10) / 10
+        ),
+      },
+      {
         label: "Precio Neto",
-        value: formatClp(result.netSalePrice),
+        value: formatClp(report.netSalePrice),
         emphasize: true,
       },
       {
         label: "IVA (19%)",
-        value: formatClp(result.iva),
+        value: formatClp(report.iva),
       },
       {
         label: "Precio Final",
-        value: formatClp(result.finalSalePrice),
+        value: formatClp(report.finalSalePrice),
         emphasize: true,
       },
     ],
   }
 }
 
-/** Nombre de archivo: Informe-Costos-YYYY-MM-DD.pdf */
-export function buildProfessionalReportFileName(date = new Date()): string {
-  const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, "0")
-  const day = String(date.getDate()).padStart(2, "0")
-  return `Informe-Costos-${year}-${month}-${day}.pdf`
-}
-
-export function formatReportGeneratedAt(date = new Date()): string {
-  return new Intl.DateTimeFormat("es-CL", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  }).format(date)
-}
+export {
+  buildProfessionalReportFileName,
+  formatReportGeneratedAt,
+} from "@/features/calculadora-costos/report-data"

@@ -18,165 +18,28 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import {
-  calculateCost,
-  type CostCalculatorResult,
-} from "@/features/calculadora-costos/calculate"
+import { COMMERCIAL } from "@/config/commercial"
 import { CalculatorResultsReport } from "@/features/calculadora-costos/calculator-results-report"
 import { CostCategoryList } from "@/features/calculadora-costos/cost-category-list"
+import {
+  calculateCostPreview,
+  type CostPreview,
+} from "@/features/calculadora-costos/cost-preview"
+import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
 import { RawMaterialsList } from "@/features/calculadora-costos/raw-materials-list"
+import { ReportUnlockScreen } from "@/features/calculadora-costos/report-unlock-screen"
 import {
   costCalculatorDefaultValues,
   costCalculatorSchema,
   type CostCalculatorValues,
 } from "@/features/calculadora-costos/schema"
-import { createWebpayPayment } from "@/features/calculadora-costos/services/createWebpayPayment"
+import { fetchProfessionalReport } from "@/features/calculadora-costos/services/fetch-professional-report"
+import { savePendingCheckoutContext } from "@/features/calculadora-costos/services/report-checkout"
+import { useProductAccess } from "@/features/licensing/use-product-access"
 import { cn } from "@/lib/utils"
-
-/** Commercial freemium: while locked, the results report must never be mounted. */
-const FREEMIUM_RESULTS_LOCKED = true
 
 const workspaceCardClass =
   "min-w-0 overflow-hidden rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-3 sm:px-8"
-
-type CostCalculatorFormProps = {
-  /**
-   * Validation flow: show the full report immediately (no payment gate).
-   * Commercial flow keeps the freemium unlock gate.
-   */
-  unlockResults?: boolean
-}
-
-function FreemiumUnlockGate({
-  values,
-  result,
-}: {
-  values: CostCalculatorValues
-  result: CostCalculatorResult
-}) {
-  const [isPaying, setIsPaying] = useState(false)
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-
-  async function handleObtainProfessionalReport() {
-    setErrorMessage(null)
-    setIsPaying(true)
-
-    try {
-      await createWebpayPayment({ values, result })
-      // Redirección a Webpay; si falla el submit del form, rehabilitamos el botón.
-    } catch {
-      setErrorMessage(
-        "No pudimos iniciar el pago. Intenta nuevamente."
-      )
-      setIsPaying(false)
-    }
-  }
-
-  return (
-    <section
-      id="desbloqueo"
-      className="scroll-mt-24"
-      aria-live="polite"
-      aria-labelledby="desbloqueo-title"
-    >
-      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-3 py-7 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
-        <h2
-          id="desbloqueo-title"
-          className="font-heading text-xl font-semibold tracking-tight text-heading break-words sm:text-3xl"
-        >
-          🎉 ¡Tu cálculo está listo!
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base">
-          Ya analizamos toda la información que ingresaste.
-        </p>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground sm:mt-5 sm:text-base">
-          En segundos podrás descubrir:
-        </p>
-        <ul className="mx-auto mt-3 max-w-md space-y-2 px-0.5 text-left text-sm leading-snug text-foreground break-words sm:px-0 sm:text-base sm:leading-normal">
-          <li>✓ ¿Cuánto realmente cuesta fabricar tu producto?</li>
-          <li>✓ ¿Cuál debería ser tu precio de venta?</li>
-          <li>✓ ¿Cuánta utilidad estás obteniendo?</li>
-          <li>✓ ¿Estás ganando o perdiendo dinero?</li>
-        </ul>
-        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-foreground sm:mt-5 sm:text-base">
-          Desbloquea tu informe completo por un único pago de:
-        </p>
-        <p className="mt-6 font-heading text-[2.25rem] font-bold tracking-tight text-heading tabular-nums sm:mt-8 sm:text-6xl">
-          $5.990 CLP
-        </p>
-        <div className="mt-6 sm:mt-8">
-          <Button
-            type="button"
-            variant="primary"
-            size="lg"
-            disabled={isPaying}
-            onClick={handleObtainProfessionalReport}
-            className="h-auto min-h-14 w-full whitespace-normal bg-[#2563EB] px-4 py-3 text-sm font-semibold leading-snug shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:w-auto sm:min-w-[13rem] sm:whitespace-nowrap sm:px-10 sm:py-2.5 sm:text-base"
-          >
-            {isPaying ? "Procesando…" : "Obtener mi Informe Profesional"}
-          </Button>
-          {errorMessage ? (
-            <p
-              role="alert"
-              className="mx-auto mt-3 max-w-md text-sm text-destructive"
-            >
-              {errorMessage}
-            </p>
-          ) : null}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-const VALIDATION_FEEDBACK_FORM_URL =
-  "https://forms.gle/tUqMEzVfjPaQBCPs9"
-
-function ValidationFeedbackCard() {
-  return (
-    <section
-      id="validacion-feedback"
-      className="scroll-mt-24"
-      aria-labelledby="validacion-feedback-title"
-    >
-      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-3 py-7 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
-        <h2
-          id="validacion-feedback-title"
-          className="font-heading text-xl font-semibold tracking-tight text-heading break-words sm:text-3xl"
-        >
-          🎉 ¡Gracias por probar MiniApps Emprende!
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base">
-          Esta herramienta se encuentra en una etapa de validación.
-        </p>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
-          Tu opinión es muy importante para ayudarnos a mejorarla antes del
-          lanzamiento oficial.
-        </p>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-foreground sm:text-base">
-          El formulario toma menos de 1 minuto y nos permitirá seguir
-          construyendo herramientas que realmente ayuden a los emprendedores.
-        </p>
-        <div className="mt-6 sm:mt-8">
-          <Button
-            asChild
-            variant="primary"
-            size="lg"
-            className="h-auto min-h-14 w-full whitespace-normal bg-[#2563EB] px-4 py-3 text-sm font-semibold leading-snug shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:w-auto sm:min-w-[13rem] sm:whitespace-nowrap sm:px-10 sm:py-2.5 sm:text-base"
-          >
-            <a
-              href={VALIDATION_FEEDBACK_FORM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Enviar opinión
-            </a>
-          </Button>
-        </div>
-      </div>
-    </section>
-  )
-}
 
 function SectionIcon({
   icon: Icon,
@@ -206,12 +69,19 @@ function SectionCount({
   )
 }
 
-export function CostCalculatorForm({
-  unlockResults = false,
-}: CostCalculatorFormProps) {
-  const [result, setResult] = useState<CostCalculatorResult | null>(null)
+export function CostCalculatorForm() {
+  const { hasAccess, isLoading: accessLoading } = useProductAccess(
+    COMMERCIAL.productId
+  )
+  /** Solo existe tras respuesta autorizada de /api/professional-report. */
+  const [professionalReport, setProfessionalReport] =
+    useState<ProfessionalReport | null>(null)
+  /** Vista previa pública — calculada en cliente, sin premium. */
+  const [preview, setPreview] = useState<CostPreview | null>(null)
   const [calculatedValues, setCalculatedValues] =
     useState<CostCalculatorValues | null>(null)
+  const [reportLoading, setReportLoading] = useState(false)
+  const [reportError, setReportError] = useState<string | null>(null)
   const [openSection, setOpenSection] = useState("materia-prima")
 
   const form = useForm<CostCalculatorValues>({
@@ -236,23 +106,62 @@ export function CostCalculatorForm({
   const laborCount = laborItems?.length ?? 0
   const indirectCount = indirectItems?.length ?? 0
 
-  function onSubmit(values: CostCalculatorValues) {
-    // Keep calculation intact; commercial freemium still withholds rendering until unlock.
+  async function onSubmit(values: CostCalculatorValues) {
     setCalculatedValues(values)
-    setResult(calculateCost(values))
+    setReportError(null)
+    // Solo inputs — nunca ProfessionalReport en sessionStorage.
+    savePendingCheckoutContext({ values })
+
+    // Nivel 1: siempre CostPreview en cliente (sin pricing premium).
+    const nextPreview = calculateCostPreview(values)
+
+    if (!hasAccess) {
+      setProfessionalReport(null)
+      setPreview(nextPreview)
+      requestAnimationFrame(() => {
+        document
+          .getElementById("desbloqueo")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" })
+      })
+      return
+    }
+
+    // Nivel 2: ProfessionalReport solo desde el servidor autorizado.
+    setPreview(null)
+    setReportLoading(true)
+    try {
+      const report = await fetchProfessionalReport(values)
+      setProfessionalReport(report)
+      requestAnimationFrame(() => {
+        document
+          .getElementById("resultado")
+          ?.scrollIntoView({ behavior: "smooth", block: "start" })
+      })
+    } catch {
+      setProfessionalReport(null)
+      setPreview(nextPreview)
+      setReportError(
+        "No se pudo obtener el Informe Profesional. Verifica tu licencia e inténtalo de nuevo."
+      )
+    } finally {
+      setReportLoading(false)
+    }
   }
 
   function handleNewCalculation() {
     form.reset(costCalculatorDefaultValues)
     setCalculatedValues(null)
-    setResult(null)
+    setProfessionalReport(null)
+    setPreview(null)
+    setReportError(null)
     setOpenSection("materia-prima")
     form.setFocus("productName")
   }
 
-  const resultsLocked = !unlockResults && FREEMIUM_RESULTS_LOCKED
-  const showUnlockGate = result !== null && calculatedValues !== null && resultsLocked
-  const showFullReport = result !== null && !resultsLocked
+  const showUnlockGate =
+    preview !== null && calculatedValues !== null && !hasAccess
+  const showFullReport =
+    professionalReport !== null && calculatedValues !== null && hasAccess
 
   return (
     <div className="mx-auto flex w-full min-w-0 max-w-2xl flex-col gap-8 sm:gap-20 lg:gap-24">
@@ -436,9 +345,10 @@ export function CostCalculatorForm({
             type="submit"
             variant="primary"
             size="lg"
+            disabled={reportLoading || accessLoading}
             className="h-12 min-h-11 w-full bg-[#2563EB] px-6 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:min-w-[13rem] sm:w-auto sm:px-10"
           >
-            Calcular
+            {reportLoading ? "Generando informe…" : "Calcular"}
           </Button>
           <Button
             type="button"
@@ -452,15 +362,23 @@ export function CostCalculatorForm({
         </div>
       </Form>
 
-      {/* Commercial freemium: unlock gate replaces the report. Validation: full report + feedback. */}
-      {showUnlockGate && result && calculatedValues ? (
-        <FreemiumUnlockGate values={calculatedValues} result={result} />
+      {reportError ? (
+        <p className="text-center text-sm text-destructive" role="alert">
+          {reportError}
+        </p>
       ) : null}
-      {showFullReport && result ? (
-        <>
-          <CalculatorResultsReport result={result} />
-          {unlockResults ? <ValidationFeedbackCard /> : null}
-        </>
+
+      {/* Sin licencia: solo CostPreview + pantalla comercial. */}
+      {showUnlockGate && preview && calculatedValues ? (
+        <ReportUnlockScreen preview={preview} values={calculatedValues} />
+      ) : null}
+
+      {/* Con licencia: solo ProfessionalReport de la API. */}
+      {showFullReport && professionalReport && calculatedValues ? (
+        <CalculatorResultsReport
+          report={professionalReport}
+          values={calculatedValues}
+        />
       ) : null}
     </div>
   )

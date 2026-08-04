@@ -4,9 +4,11 @@
  */
 
 import {
-  CALCULATOR_ENTRY_HREF,
-  VALIDATION_MODE,
-} from "@/config/validation"
+  COMMERCIAL,
+  formatCommercialAmount,
+  formatCommercialPrice,
+  getCheckoutUrl,
+} from "@/config/commercial"
 
 export const landingContent = {
   hero: {
@@ -14,16 +16,10 @@ export const landingContent = {
     description:
       "Descubre el costo real de tus productos y obtén un precio de venta recomendado en menos de 5 minutos.",
     cta: {
-      label: VALIDATION_MODE
-        ? "Probar gratis (validación exclusiva)"
-        : "Calcular mi precio ahora",
-      href: CALCULATOR_ENTRY_HREF,
-      eyebrow: VALIDATION_MODE
-        ? "Acceso gratuito por tiempo limitado"
-        : null,
-      note: VALIDATION_MODE
-        ? "Esta versión está disponible gratuitamente por tiempo limitado para recopilar opiniones y mejorar la herramienta."
-        : null,
+      label: "Crear cuenta gratis",
+      href: "/register",
+      eyebrow: "Empieza gratis en menos de 5 minutos.",
+      note: "Crea tu cuenta sin costo. Descubre el precio correcto para vender con confianza.",
     },
   },
   problem: {
@@ -75,33 +71,24 @@ export const landingContent = {
     id: "precio",
     badge: "LANZAMIENTO 🚀",
     title: "Comienza hoy por un pago único.",
-    originalPrice: "$14.990",
-    launchPrice: "$5.990 CLP",
-    savings: "Ahorra $9.000 con el precio de lanzamiento.",
-    benefits: [
-      "Pago único.",
-      "Acceso inmediato.",
-      "Sin suscripciones.",
-      "Actualizaciones incluidas para la versión V1.",
-    ],
+    originalPrice: formatCommercialAmount(COMMERCIAL.compareAtPrice),
+    launchPrice: formatCommercialPrice(),
+    savings: `Ahorra ${formatCommercialAmount(COMMERCIAL.compareAtPrice - COMMERCIAL.price)}.`,
+    benefits: [...COMMERCIAL.licenseBenefits],
     cta: {
       label: "Comprar ahora",
-      href: "https://www.webpay.cl/form-pay/402692",
+      href: getCheckoutUrl(),
     },
-    footnote: "*Precio de lanzamiento por tiempo limitado.",
+    footnote: COMMERCIAL.paymentLabel,
   },
   finalCta: {
     id: "cta-final",
     title: "Deja de poner precios a ciegas.",
-    description: "Calcula el costo real de tus productos hoy mismo.",
+    description: "Empieza hoy a calcular el costo real de tus productos.",
     cta: {
-      label: VALIDATION_MODE
-        ? "Probar gratis (validación exclusiva)"
-        : "Comenzar ahora.",
-      href: CALCULATOR_ENTRY_HREF,
-      note: VALIDATION_MODE
-        ? "Esta versión está disponible gratuitamente por tiempo limitado para recopilar opiniones y mejorar la herramienta."
-        : null,
+      label: "Crear cuenta gratis",
+      href: "/register",
+      note: "Sin tarjeta de crédito. Empieza a calcular en pocos minutos.",
     },
   },
   footer: {

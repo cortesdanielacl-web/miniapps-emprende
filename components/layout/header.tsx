@@ -1,10 +1,14 @@
+"use client"
+
 import Link from "next/link"
 
 import { BrandLogo } from "@/components/common/brand-logo"
 import { PageContainer } from "@/components/common/page-container"
-import { CALCULATOR_ENTRY_HREF } from "@/config/validation"
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { CALCULATOR_ENTRY_HREF } from "@/config/routes"
+import { useAuth } from "@/features/auth/use-auth"
 import { APP_NAME } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 
 type HeaderProps = React.ComponentProps<"header"> & {
   title?: string
@@ -18,6 +22,13 @@ function Header({
   title = APP_NAME,
   ...props
 }: HeaderProps) {
+  const { isAuthenticated, loading, logout } = useAuth()
+
+  async function handleLogout() {
+    await logout()
+    window.location.href = "/"
+  }
+
   return (
     <header
       data-slot="header"
@@ -42,13 +53,39 @@ function Header({
             </span>
           </span>
         </Link>
-        <Link
-          href={CALCULATOR_ENTRY_HREF}
-          className="flex min-h-11 w-full items-center justify-center whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:w-auto sm:justify-start sm:px-3.5 sm:text-left"
-        >
-          <span className="sm:hidden">Calculadora</span>
-          <span className="hidden sm:inline">Calculadora Inteligente</span>
-        </Link>
+
+        <div className="flex w-full flex-col gap-1 sm:w-auto sm:flex-row sm:items-center sm:gap-1">
+          <Link
+            href={CALCULATOR_ENTRY_HREF}
+            className="flex min-h-11 w-full items-center justify-center whitespace-nowrap rounded-xl px-3 py-2 text-center text-sm font-medium text-heading transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none sm:w-auto sm:justify-start sm:px-3.5 sm:text-left"
+          >
+            <span className="sm:hidden">Calculadora</span>
+            <span className="hidden sm:inline">Calculadora Inteligente</span>
+          </Link>
+
+          {!loading && isAuthenticated ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="w-full justify-center sm:w-auto"
+            >
+              Cerrar sesión
+            </Button>
+          ) : null}
+
+          {!loading && !isAuthenticated ? (
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="w-full justify-center sm:w-auto"
+            >
+              <Link href="/login">Iniciar sesión</Link>
+            </Button>
+          ) : null}
+        </div>
       </PageContainer>
     </header>
   )

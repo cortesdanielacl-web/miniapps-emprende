@@ -1,6 +1,19 @@
-import { ResultCard } from "@/components/common"
-import type { CostCalculatorResult } from "@/features/calculadora-costos/calculate"
+"use client"
+
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { DownloadIcon } from "lucide-react"
+
+import { EmptyState, ResultCard } from "@/components/common"
+import { Button } from "@/components/ui/button"
+import { CALCULATOR_ENTRY_HREF } from "@/config/routes"
+import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
 import { buildProfessionalReportView } from "@/features/calculadora-costos/report-presentation"
+import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
+import {
+  PremiumAccessDeniedError,
+  premiumAccessService,
+} from "@/features/licensing/premium-access-service"
 import { cn } from "@/lib/utils"
 
 function MetricTile({
@@ -29,13 +42,103 @@ function MetricTile({
   )
 }
 
-/** Informe Profesional — resumen del cálculo de costos. */
+function DownloadReportButton({ values }: { values: CostCalculatorValues }) {
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  async function handleDownload() {
+    setError(null)
+    setIsDownloading(true)
+    try {
+      const allowed = await premiumAccessService.canDownloadReport()
+      if (!allowed) {
+        setError("Se requiere una licencia activa para descargar el informe.")
+        return
+      }
+
+      const { downloadProfessionalReportPdf } = await import(
+        "@/features/calculadora-costos/pdf/download-professional-report-pdf"
+      )
+      // PDF: ProfessionalReport fresco desde la API (no estado React).
+      await downloadProfessionalReportPdf(values)
+    } catch (err) {
+      if (err instanceof PremiumAccessDeniedError) {
+        setError(err.message)
+      } else {
+        setError("No se pudo generar el PDF. Inténtalo nuevamente.")
+      }
+    } finally {
+      setIsDownloading(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <Button
+        type="button"
+        variant="primary"
+        size="lg"
+        onClick={handleDownload}
+        disabled={isDownloading}
+        data-icon="inline-start"
+      >
+        <DownloadIcon data-icon="inline-start" />
+        {isDownloading ? "Generando PDF…" : "Descargar Informe PDF"}
+      </Button>
+      {error ? (
+        <p className="text-sm text-destructive" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  )
+}
+
+/**
+ * Informe Profesional — solo con ProfessionalReport de la API autorizada.
+ */
 export function CalculatorResultsReport({
-  result,
+  report,
+  values,
 }: {
-  result: CostCalculatorResult
+  report: ProfessionalReport
+  values: CostCalculatorValues
 }) {
-  const view = buildProfessionalReportView(result)
+  const [allowed, setAllowed] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    void premiumAccessService.canViewPremiumResults().then((ok) => {
+      if (!cancelled) setAllowed(ok)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (allowed === null) {
+    return (
+      <p className="text-center text-sm text-muted-foreground" aria-live="polite">
+        Verificando acceso…
+      </p>
+    )
+  }
+
+  if (!allowed) {
+    return (
+      <EmptyState
+        title="Contenido premium"
+        description="Necesitas una licencia activa para ver el Informe Profesional y descargar el PDF."
+        action={
+          <Button asChild variant="primary" size="lg">
+            <Link href={CALCULATOR_ENTRY_HREF}>Volver a la calculadora</Link>
+          </Button>
+        }
+      />
+    )
+  }
+
+  const view = buildProfessionalReportView(report)
 
   return (
     <section id="resultado" className="scroll-mt-24" aria-live="polite">
@@ -68,6 +171,8 @@ export function CalculatorResultsReport({
               />
             ))}
           </div>
+
+          <DownloadReportButton values={values} />
         </div>
       </ResultCard>
     </section>

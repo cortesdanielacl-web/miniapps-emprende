@@ -1,19 +1,13 @@
-import Link from "next/link"
 import { CheckIcon } from "lucide-react"
 
-import { PageContainer } from "@/components/common"
+import { PageContainer, PaymentTrustNotice } from "@/components/common"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { VALIDATION_MODE } from "@/config/validation"
 import { landingContent } from "@/features/landing/content"
 
 const content = landingContent.pricing
 
 export function LandingPricing() {
-  if (VALIDATION_MODE) {
-    return null
-  }
-
   return (
     <section
       id={content.id}
@@ -61,13 +55,21 @@ export function LandingPricing() {
               ))}
             </ul>
 
+            <PaymentTrustNotice />
+
             <Button
               asChild
               variant="primary"
               size="lg"
               className="w-full sm:w-auto sm:min-w-[15rem] sm:px-10"
             >
-              <Link href={content.cta.href}>{content.cta.label}</Link>
+              <a
+                href={content.cta.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {content.cta.label}
+              </a>
             </Button>
 
             <p className="text-xs text-muted-foreground sm:text-sm">

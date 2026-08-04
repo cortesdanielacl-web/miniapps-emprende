@@ -11,6 +11,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@react-pdf/renderer": "^4.5.1",
+    "@supabase/ssr": "^0.12.4",
     "@supabase/supabase-js": "^2.110.7",
     "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
@@ -21,6 +22,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.81.0",
+    "server-only": "^0.0.1",
     "shadcn": "^4.13.0",
     "tailwind-merge": "^3.6.0",
     "transbank-sdk": "^6.1.1",

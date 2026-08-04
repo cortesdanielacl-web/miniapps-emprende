@@ -1,17 +1,19 @@
 import { NextResponse } from "next/server"
 import { WebpayPlus } from "transbank-sdk"
 
-import {
-  PAYMENT_STATUS,
-  type PaymentResultStatus,
-} from "@/features/calculadora-costos/services/paymentStatus"
+import { getConfirmationPath } from "@/config/commercial"
 
 /**
  * Webpay Plus — Commit (SDK oficial Transbank v6).
  * Docs: https://www.transbankdevelopers.cl/documentacion/webpay-plus
  *
- * Valida el pago con Transbank y redirige a `/resultado-pago`.
- * No renderiza UI ni lee sessionStorage (responsabilidad del cliente).
+ * Valida el pago con Transbank y redirige al único flujo postventa:
+ * /compra/confirmacion (getConfirmationPath).
+ *
+ * Integración futura de licencias (no implementada aún):
+ * tras commit aprobado → licenseService.activateLicenseFromPayment({
+ *   targetUserId, productId, paymentReference: buyOrder
+ * }) desde @/features/licensing/license-service.server
  */
 
 function getRequiredEnv(name: string): string {
@@ -47,17 +49,17 @@ function createWebpayTransaction() {
     : WebpayPlus.Transaction.buildForIntegration(commerceCode, apiKey)
 }
 
-function redirectToResultadoPago(status: PaymentResultStatus) {
+/** Único destino postventa: /compra/confirmacion. */
+function redirectToConfirmation() {
   const appUrl = getRequiredEnv("APP_URL").replace(/\/$/, "")
-  const destination = new URL("/resultado-pago", `${appUrl}/`)
-  destination.searchParams.set("status", status)
+  const destination = new URL(getConfirmationPath(), `${appUrl}/`)
   return NextResponse.redirect(destination, 303)
 }
 
-/** Redirige al resultado; si falta APP_URL, responde JSON controlado. */
-function safeRedirect(status: PaymentResultStatus) {
+/** Redirige a confirmación; si falta APP_URL, responde JSON controlado. */
+function safeRedirectToConfirmation() {
   try {
-    return redirectToResultadoPago(status)
+    return redirectToConfirmation()
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Configuración incompleta"
@@ -116,19 +118,18 @@ async function handleCommit(request: Request) {
     params = await readReturnParams(request)
   } catch (error) {
     console.error("[webpay/commit] params error:", error)
-    return safeRedirect(PAYMENT_STATUS.ERROR)
+    return safeRedirectToConfirmation()
   }
 
   // Cancelación en Webpay (TBK_TOKEN) o retorno sin token_ws.
   if (!params.tokenWs) {
-    return safeRedirect(PAYMENT_STATUS.REJECTED)
+    return safeRedirectToConfirmation()
   }
 
   let transaction: ReturnType<typeof createWebpayTransaction>
   let expectedAmount: number
 
   try {
-    // APP_URL se valida aquí para fallar controlado antes del commit.
     getRequiredEnv("APP_URL")
     getRequiredEnv("WEBPAY_RETURN_URL")
     expectedAmount = getExpectedAmount()
@@ -137,19 +138,24 @@ async function handleCommit(request: Request) {
     const message =
       error instanceof Error ? error.message : "Configuración Webpay incompleta"
     console.error("[webpay/commit] config error:", message)
-    return safeRedirect(PAYMENT_STATUS.ERROR)
+    return safeRedirectToConfirmation()
   }
 
   try {
     const commitResponse = await transaction.commit(params.tokenWs)
     const approved = isApprovedCommit(commitResponse, expectedAmount)
 
-    return safeRedirect(
-      approved ? PAYMENT_STATUS.SUCCESS : PAYMENT_STATUS.REJECTED
-    )
+    if (!approved) {
+      console.error("[webpay/commit] payment not authorized", {
+        status: commitResponse.status,
+        response_code: commitResponse.response_code,
+      })
+    }
+
+    return safeRedirectToConfirmation()
   } catch (error) {
     console.error("[webpay/commit] Webpay commit error:", error)
-    return safeRedirect(PAYMENT_STATUS.ERROR)
+    return safeRedirectToConfirmation()
   }
 }
 

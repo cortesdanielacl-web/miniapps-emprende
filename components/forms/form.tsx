@@ -54,6 +54,7 @@ type FormFieldProps<
   required?: boolean
   hint?: string
   disabled?: boolean
+  autoComplete?: string
 } & Omit<ControllerProps<TFieldValues, TName>, "name" | "render" | "control">
 
 /**
@@ -70,6 +71,7 @@ function FormField<
   required,
   hint,
   disabled,
+  autoComplete,
   ...controllerProps
 }: FormFieldProps<TFieldValues, TName>) {
   const { control } = useFormContext<TFieldValues>()
@@ -88,6 +90,7 @@ function FormField<
           required={required}
           hint={hint}
           disabled={disabled}
+          autoComplete={autoComplete}
           error={fieldState.error?.message}
           name={field.name}
           value={field.value ?? ""}
