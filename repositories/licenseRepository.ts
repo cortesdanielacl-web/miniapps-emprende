@@ -1,8 +1,8 @@
 /**
- * Acceso de lectura a licencias (Supabase).
- * Sin lógica de negocio. Seguro para cliente (RLS).
+ * Acceso de lectura a licencias (Supabase) — cliente.
+ * Sin lógica de negocio. Seguro para Client Components (RLS + browser client).
  *
- * Escrituras → repositories/licenseRepository.server.ts
+ * Servidor → repositories/licenseRepository.server.ts
  */
 
 import type { ProductId } from "@/config/products"
@@ -13,7 +13,6 @@ import type {
   LicenseType,
 } from "@/features/licensing/types"
 import { createClient as createBrowserClient } from "@/lib/supabase/client"
-import { createClient as createServerClient } from "@/lib/supabase/server"
 
 export type LicenseRow = {
   id: string
@@ -43,17 +42,10 @@ export function mapLicenseRow(row: LicenseRow): License {
   }
 }
 
-async function getUserScopedClient() {
-  if (typeof window === "undefined") {
-    return createServerClient()
-  }
-  return createBrowserClient()
-}
-
 export const licenseRepository = {
   /** Obtiene una licencia por id (RLS: solo propia). */
   async getLicense(id: string): Promise<License | null> {
-    const supabase = await getUserScopedClient()
+    const supabase = createBrowserClient()
     const { data, error } = await supabase
       .from("licenses")
       .select("*")
@@ -67,9 +59,9 @@ export const licenseRepository = {
     return mapLicenseRow(data as LicenseRow)
   },
 
-  /** Lista licencias de un usuario (RLS: solo propias con cliente de sesión). */
+  /** Lista licencias de un usuario (RLS: solo propias). */
   async getUserLicenses(userId: string): Promise<License[]> {
-    const supabase = await getUserScopedClient()
+    const supabase = createBrowserClient()
     const { data, error } = await supabase
       .from("licenses")
       .select("*")
@@ -87,7 +79,7 @@ export const licenseRepository = {
     userId: string,
     productId: ProductId
   ): Promise<License | null> {
-    const supabase = await getUserScopedClient()
+    const supabase = createBrowserClient()
     const { data, error } = await supabase
       .from("licenses")
       .select("*")

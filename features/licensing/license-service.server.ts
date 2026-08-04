@@ -7,7 +7,7 @@
 import "server-only"
 
 import { getProduct, type ProductId } from "@/config/products"
-import { getCurrentUserId } from "@/features/auth/session"
+import { getCurrentUserId } from "@/features/auth/session.server"
 import { licenseService as licenseReadService } from "@/features/licensing/license-service"
 import type {
   License,

@@ -5,7 +5,7 @@ import { costCalculatorSchema } from "@/features/calculadora-costos/schema"
 import {
   PremiumAccessDeniedError,
   premiumAccessService,
-} from "@/features/licensing/premium-access-service"
+} from "@/features/licensing/premium-access-service.server"
 import {
   ACCESS_VALIDATION_FAILED_MESSAGE,
   logSecurityError,

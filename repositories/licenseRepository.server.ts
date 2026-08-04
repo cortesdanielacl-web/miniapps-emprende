@@ -16,10 +16,10 @@ import type {
   LicenseType,
 } from "@/features/licensing/types"
 import { createServiceRoleClient } from "@/lib/supabase/admin"
+import { createClient as createServerClient } from "@/lib/supabase/server"
 import {
   mapLicenseRow,
   type LicenseRow,
-  licenseRepository as licenseReadRepository,
 } from "@/repositories/licenseRepository"
 
 export type CreateLicenseData = {
@@ -92,11 +92,59 @@ async function getProductLicenseAdmin(
   return mapLicenseRow(data as LicenseRow)
 }
 
+async function getLicense(id: string): Promise<License | null> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from("licenses")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(`getLicense: ${error.message}`)
+  }
+  if (!data) return null
+  return mapLicenseRow(data as LicenseRow)
+}
+
+async function getUserLicenses(userId: string): Promise<License[]> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from("licenses")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+
+  if (error) {
+    throw new Error(`getUserLicenses: ${error.message}`)
+  }
+  return ((data ?? []) as LicenseRow[]).map(mapLicenseRow)
+}
+
+async function getProductLicense(
+  userId: string,
+  productId: ProductId
+): Promise<License | null> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from("licenses")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("product_id", productId)
+    .maybeSingle()
+
+  if (error) {
+    throw new Error(`getProductLicense: ${error.message}`)
+  }
+  if (!data) return null
+  return mapLicenseRow(data as LicenseRow)
+}
+
 export const licenseRepository = {
-  /** Lectura con sesión (RLS) — delegada al repo cliente-seguro. */
-  getLicense: licenseReadRepository.getLicense,
-  getUserLicenses: licenseReadRepository.getUserLicenses,
-  getProductLicense: licenseReadRepository.getProductLicense,
+  /** Lectura con sesión de usuario (RLS + cookies). */
+  getLicense,
+  getUserLicenses,
+  getProductLicense,
 
   /** Lecturas admin (service role). */
   getLicenseAdmin,

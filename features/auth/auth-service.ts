@@ -24,7 +24,6 @@ import type {
 } from "@/features/auth/types"
 import { createClient as createBrowserClient } from "@/lib/supabase/client"
 import { getSupabaseEnv } from "@/lib/supabase/env"
-import { createClient as createServerClient } from "@/lib/supabase/server"
 import { logSecurityError } from "@/lib/security-log"
 
 function supabaseConfigError(): { ok: false; error: string } {
@@ -136,27 +135,11 @@ export const authService = {
   /**
    * Usuario autenticado (cliente).
    * getUser() consulta Auth cuando se necesita el registro completo.
+   * Servidor → auth-service.server.ts
    */
   async getCurrentUser(): Promise<AuthUser | null> {
     const user = await getBrowserUser()
     return user ? mapSupabaseUser(user) : null
-  },
-
-  /**
-   * Usuario autenticado (servidor / RSC).
-   * getUser() para el registro fresco; la protección de rutas usa getClaims() en el Proxy.
-   */
-  async getCurrentUserServer(): Promise<AuthUser | null> {
-    try {
-      if (!getSupabaseEnv()) return null
-      const supabase = await createServerClient()
-      const { data, error } = await supabase.auth.getUser()
-      if (error || !data.user) return null
-      return mapSupabaseUser(data.user)
-    } catch (error) {
-      logSecurityError("authService", error, "getCurrentUserServer fail-closed")
-      return null
-    }
   },
 
   /** Verifica identidad en cliente vía JWT (getClaims). Fail closed → false. */
@@ -169,24 +152,6 @@ export const authService = {
       return true
     } catch (error) {
       logSecurityError("authService", error, "isAuthenticated fail-closed")
-      return false
-    }
-  },
-
-  /** Verifica identidad en servidor vía JWT (getClaims). Fail closed → false. */
-  async isAuthenticatedServer(): Promise<boolean> {
-    try {
-      if (!getSupabaseEnv()) return false
-      const supabase = await createServerClient()
-      const { data, error } = await supabase.auth.getClaims()
-      if (error || !data?.claims) return false
-      return true
-    } catch (error) {
-      logSecurityError(
-        "authService",
-        error,
-        "isAuthenticatedServer fail-closed"
-      )
       return false
     }
   },
