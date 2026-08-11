@@ -166,7 +166,7 @@ export const pendingPurchaseService = {
       const purchase =
         await pendingPurchaseRepository.createPendingPurchase(payload)
 
-      void notifySupportPending(purchase)
+      await notifySupportPending(purchase)
       return purchase
     } catch (error) {
       logSecurityError(
@@ -208,9 +208,11 @@ export const pendingPurchaseService = {
         paymentDate: new Date().toISOString(),
       })
 
-      void notifySupportPending(purchase)
+      await notifySupportPending(purchase)
       return purchase
     } catch (error) {
+      // TEMP: ver error real de createPendingPurchase / listAll en Vercel
+      console.error("[registerFromCheckoutReturn]", error)
       logSecurityError(
         "pendingPurchaseService",
         error,
@@ -290,7 +292,7 @@ export const pendingPurchaseService = {
     })
 
     const updated = await pendingPurchaseRepository.markActivated(purchaseId)
-    void notifyClientActivated(updated)
+    await notifyClientActivated(updated)
     return updated
   },
 }
