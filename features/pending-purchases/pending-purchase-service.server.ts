@@ -19,6 +19,9 @@ import { sendEmail } from "@/lib/email/send-email"
 import { logSecurityError } from "@/lib/security-log"
 import { pendingPurchaseRepository } from "@/repositories/pendingPurchaseRepository.server"
 
+/** Placeholder cuando Webpay Plus no tiene intent con correo. No enviar al cliente. */
+const MISSING_CUSTOMER_EMAIL = "sin-correo@miniappsemprende.cl"
+
 function formatAmountClp(amount: number): string {
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
@@ -85,6 +88,42 @@ async function notifySupportPending(purchase: PendingPurchase): Promise<void> {
   })
 }
 
+function isSendableCustomerEmail(email: string): boolean {
+  const normalized = email.trim().toLowerCase()
+  return Boolean(normalized) && normalized !== MISSING_CUSTOMER_EMAIL
+}
+
+async function notifyClientPurchaseConfirmation(
+  purchase: PendingPurchase
+): Promise<void> {
+  if (!isSendableCustomerEmail(purchase.email)) {
+    return
+  }
+
+  const text = [
+    "Hola,",
+    "",
+    `Recibimos correctamente tu compra de ${purchase.product} por ${formatAmountClp(purchase.amount)}.`,
+    "",
+    `Fecha: ${formatDateEs(purchase.paymentDate)}`,
+    "",
+    "Tu compra quedó registrada y será revisada para activar tu licencia.",
+    "",
+    "Una vez activada, recibirás un segundo correo confirmándote que ya puedes utilizar tu MiniApp.",
+    "",
+    "Gracias por confiar en MiniApps Emprende.",
+    "",
+    "MiniApps Emprende",
+    "miniappsemprende.cl",
+  ].join("\n")
+
+  await sendEmail({
+    to: purchase.email,
+    subject: "Recibimos tu compra de MiniApps Emprende",
+    text,
+  })
+}
+
 async function notifyClientActivated(purchase: PendingPurchase): Promise<void> {
   const name = purchase.customerName?.trim() || "cliente"
 
@@ -146,7 +185,7 @@ export const pendingPurchaseService = {
 
       const payload: CreatePendingPurchaseInput = {
         userId: intent?.userId ?? null,
-        email: intent?.email ?? "sin-correo@miniappsemprende.cl",
+        email: intent?.email ?? MISSING_CUSTOMER_EMAIL,
         customerName: intent?.customerName ?? null,
         product: intent?.product ?? COMMERCIAL.productName,
         amount: intent?.amount ?? input.amount,
@@ -167,6 +206,7 @@ export const pendingPurchaseService = {
         await pendingPurchaseRepository.createPendingPurchase(payload)
 
       await notifySupportPending(purchase)
+      await notifyClientPurchaseConfirmation(purchase)
       return purchase
     } catch (error) {
       logSecurityError(
@@ -209,6 +249,7 @@ export const pendingPurchaseService = {
       })
 
       await notifySupportPending(purchase)
+      await notifyClientPurchaseConfirmation(purchase)
       return purchase
     } catch (error) {
       // TEMP: ver error real de createPendingPurchase / listAll en Vercel
