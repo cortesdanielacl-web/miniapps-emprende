@@ -26,7 +26,10 @@ import {
   type CostPreview,
 } from "@/features/calculadora-costos/cost-preview"
 import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
-import { PricingDecision } from "@/features/calculadora-costos/pricing-decision"
+import {
+  PricingDecision,
+  type PricingResolution,
+} from "@/features/calculadora-costos/pricing-decision"
 import { RawMaterialsList } from "@/features/calculadora-costos/raw-materials-list"
 import { ReportUnlockScreen } from "@/features/calculadora-costos/report-unlock-screen"
 import {
@@ -85,7 +88,8 @@ export function CostCalculatorForm() {
   const [reportError, setReportError] = useState<string | null>(null)
   const [openSection, setOpenSection] = useState("materia-prima")
   const [costRunId, setCostRunId] = useState(0)
-  const [pricingMargin, setPricingMargin] = useState("")
+  const [pricingResolution, setPricingResolution] =
+    useState<PricingResolution | null>(null)
 
   const form = useForm<CostCalculatorValues>({
     resolver: zodResolver(costCalculatorSchema),
@@ -111,7 +115,7 @@ export function CostCalculatorForm() {
 
   async function onSubmit(values: CostCalculatorValues) {
     setCalculatedValues(values)
-    setPricingMargin("")
+    setPricingResolution(null)
     setProfessionalReport(null)
     setReportError(null)
     setCostRunId((runId) => runId + 1)
@@ -128,15 +132,23 @@ export function CostCalculatorForm() {
     })
   }
 
+  function withPricing(
+    values: CostCalculatorValues
+  ): CostCalculatorValues {
+    return {
+      ...values,
+      desiredMargin: pricingResolution?.desiredMargin ?? "",
+      pricingPath: pricingResolution?.pricingPath,
+      appliedMarkup: pricingResolution?.appliedMarkup ?? "",
+    }
+  }
+
   useEffect(() => {
-    if (!hasAccess || !calculatedValues || pricingMargin === "") {
+    if (!hasAccess || !calculatedValues || !pricingResolution) {
       return
     }
 
-    const values: CostCalculatorValues = {
-      ...calculatedValues,
-      desiredMargin: pricingMargin,
-    }
+    const values = withPricing(calculatedValues)
     savePendingCheckoutContext({ values })
 
     let cancelled = false
@@ -164,16 +176,21 @@ export function CostCalculatorForm() {
       cancelled = true
       window.clearTimeout(timeoutId)
     }
-  }, [calculatedValues, hasAccess, pricingMargin])
+  }, [calculatedValues, hasAccess, pricingResolution])
 
-  function handlePricingResolved(desiredMargin: string) {
-    setPricingMargin(desiredMargin)
-    if (!desiredMargin) {
+  function handlePricingResolved(resolution: PricingResolution | null) {
+    setPricingResolution(resolution)
+    if (!resolution) {
       setProfessionalReport(null)
     }
     if (calculatedValues) {
       savePendingCheckoutContext({
-        values: { ...calculatedValues, desiredMargin },
+        values: {
+          ...calculatedValues,
+          desiredMargin: resolution?.desiredMargin ?? "",
+          pricingPath: resolution?.pricingPath,
+          appliedMarkup: resolution?.appliedMarkup ?? "",
+        },
       })
     }
   }
@@ -183,7 +200,7 @@ export function CostCalculatorForm() {
     setCalculatedValues(null)
     setProfessionalReport(null)
     setPreview(null)
-    setPricingMargin("")
+    setPricingResolution(null)
     setReportError(null)
     setOpenSection("materia-prima")
     form.setFocus("productName")
@@ -394,7 +411,7 @@ export function CostCalculatorForm() {
         />
       ) : null}
 
-      {hasAccess && pricingMargin && reportLoading ? (
+      {hasAccess && pricingResolution && reportLoading ? (
         <p className="text-center text-sm text-muted-foreground" aria-live="polite">
           Generando informe…
         </p>
@@ -410,7 +427,7 @@ export function CostCalculatorForm() {
       {showUnlockGate && preview && calculatedValues ? (
         <ReportUnlockScreen
           preview={preview}
-          values={{ ...calculatedValues, desiredMargin: pricingMargin }}
+          values={withPricing(calculatedValues)}
         />
       ) : null}
 
@@ -418,7 +435,7 @@ export function CostCalculatorForm() {
       {showFullReport && professionalReport && calculatedValues ? (
         <CalculatorResultsReport
           report={professionalReport}
-          values={{ ...calculatedValues, desiredMargin: pricingMargin }}
+          values={withPricing(calculatedValues)}
         />
       ) : null}
     </div>

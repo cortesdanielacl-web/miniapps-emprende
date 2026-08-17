@@ -4,6 +4,7 @@
  */
 
 import type { CostBreakdownLine } from "@/features/calculadora-costos/cost-aggregation"
+import type { PricingPath } from "@/features/calculadora-costos/schema"
 
 export type ProfessionalReport = {
   productName: string
@@ -13,8 +14,12 @@ export type ProfessionalReport = {
   indirectTotal: number
   totalCost: number
   unitCost: number
-  /** Margen objetivo (%) ingresado / aplicado. */
+  /** Margen sobre venta (%) — no indica por sí solo el camino elegido. */
   margin: number
+  /** Camino con el que el usuario definió el precio. */
+  pricingPath: PricingPath
+  /** Recargo % ingresado por el usuario. Solo cuando pricingPath === "markup". */
+  appliedMarkup: number | null
   netSalePrice: number
   iva: number
   /** Precio de venta recomendado (con IVA). */

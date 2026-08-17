@@ -11,10 +11,53 @@ import {
   netSalePriceFromMargin,
   profitFromNetPrice,
 } from "@/features/calculadora-costos/pricing"
-import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
-import { formatClp } from "@/features/calculadora-costos/format-money"
+import {
+  PRICING_PATHS,
+  type CostCalculatorValues,
+  type PricingPath,
+} from "@/features/calculadora-costos/schema"
+import {
+  formatClp,
+  formatPercentOneDecimal,
+} from "@/features/calculadora-costos/format-money"
 
 export const IVA_RATE = 0.19
+
+function resolvePricingPath(
+  value: CostCalculatorValues["pricingPath"]
+): PricingPath {
+  if (value && PRICING_PATHS.includes(value)) {
+    return value
+  }
+  return "margin"
+}
+
+function resolveAppliedMarkup(
+  path: PricingPath,
+  raw: string | undefined
+): number | null {
+  if (path !== "markup") {
+    return null
+  }
+  const parsed = Number(raw)
+  return Number.isFinite(parsed) ? parsed : null
+}
+
+function buildRecommendations(
+  path: PricingPath,
+  netSalePrice: number,
+  profit: number,
+  margin: number
+): string {
+  const price = formatClp(netSalePrice)
+  if (path === "markup") {
+    return `Con los costos ingresados y el recargo definido, el precio calculado para tu producto es de ${price}.`
+  }
+  if (path === "sale-price") {
+    return `Con un precio de venta de ${price}, obtienes una ganancia de ${formatClp(profit)} y un margen de ${formatPercentOneDecimal(margin)}.`
+  }
+  return `Para alcanzar el margen objetivo definido, el precio calculado para tu producto es de ${price}.`
+}
 
 /**
  * Genera el informe profesional completo.
@@ -34,6 +77,8 @@ export function calculateProfessionalReport(
   const profit = profitFromNetPrice(agg.totalCost, netSalePrice)
   const profitability =
     agg.totalCost > 0 ? (profit / agg.totalCost) * 100 : 0
+  const pricingPath = resolvePricingPath(values.pricingPath)
+  const appliedMarkup = resolveAppliedMarkup(pricingPath, values.appliedMarkup)
 
   return {
     productName: agg.productName,
@@ -44,13 +89,20 @@ export function calculateProfessionalReport(
     totalCost: agg.totalCost,
     unitCost: agg.unitCost,
     margin: safeMargin,
+    pricingPath,
+    appliedMarkup,
     netSalePrice,
     iva,
     finalSalePrice,
     profit,
     profitPerUnit: profit,
     profitability,
-    recommendations: `Con los costos ingresados, se recomienda vender este producto desde ${formatClp(finalSalePrice)} para mantener el margen objetivo definido durante el cálculo.`,
+    recommendations: buildRecommendations(
+      pricingPath,
+      netSalePrice,
+      profit,
+      safeMargin
+    ),
     materialLines: agg.materialLines,
     laborLines: agg.laborLines,
     indirectLines: agg.indirectLines,

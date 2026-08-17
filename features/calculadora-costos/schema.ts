@@ -38,6 +38,12 @@ const optionalDesiredMargin = z
     message: "El margen debe ser menor que 100%.",
   })
 
+export const PRICING_PATHS = ["markup", "margin", "sale-price"] as const
+export type PricingPath = (typeof PRICING_PATHS)[number]
+
+const optionalPricingPath = z.enum(PRICING_PATHS).optional()
+const optionalAppliedMarkup = z.string().optional()
+
 export const unitSchema = z.enum(UNITS)
 
 export const costLineSchema = z.object({
@@ -88,6 +94,8 @@ export const costCalculatorSchema = z.object({
   laborItems: costLinesSchema,
   indirectItems: costLinesSchema,
   desiredMargin: optionalDesiredMargin,
+  pricingPath: optionalPricingPath,
+  appliedMarkup: optionalAppliedMarkup,
 })
 
 export type CostCalculatorValues = z.infer<typeof costCalculatorSchema>
@@ -112,6 +120,8 @@ export const costCalculatorDefaultValues: CostCalculatorValues = {
   laborItems: [{ ...emptyCostLine }],
   indirectItems: [{ ...emptyCostLine }],
   desiredMargin: "",
+  pricingPath: undefined,
+  appliedMarkup: "",
 }
 
 export type { Unit }

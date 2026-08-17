@@ -10,14 +10,21 @@ import {
   calculatePricingFromSalePrice,
   formatPricingPercent,
 } from "@/features/calculadora-costos/pricing"
+import type { PricingPath } from "@/features/calculadora-costos/schema"
 import { cn } from "@/lib/utils"
 
 export type PricingGoal = "define-price" | "known-price"
 export type PriceDefineMethod = "markup" | "margin"
 
+export type PricingResolution = {
+  desiredMargin: string
+  pricingPath: PricingPath
+  appliedMarkup: string
+}
+
 type PricingDecisionProps = {
   totalCost: number
-  onResolved: (desiredMargin: string) => void
+  onResolved: (resolution: PricingResolution | null) => void
 }
 
 function serializePercent(value: number): string {
@@ -106,7 +113,15 @@ export function PricingDecision({ totalCost, onResolved }: PricingDecisionProps)
       value.trim() === "" || Number.isNaN(markup)
         ? null
         : calculatePricingFromMarkup(totalCost, markup)
-    onResolved(result ? serializePercent(result.saleMargin) : "")
+    onResolved(
+      result
+        ? {
+            desiredMargin: serializePercent(result.saleMargin),
+            pricingPath: "markup",
+            appliedMarkup: String(markup),
+          }
+        : null
+    )
   }
 
   function resolveFromMargin(value: string) {
@@ -116,7 +131,15 @@ export function PricingDecision({ totalCost, onResolved }: PricingDecisionProps)
       value.trim() === "" || Number.isNaN(margin)
         ? null
         : calculatePricingFromMargin(totalCost, margin)
-    onResolved(result ? serializePercent(result.desiredMargin) : "")
+    onResolved(
+      result
+        ? {
+            desiredMargin: serializePercent(result.desiredMargin),
+            pricingPath: "margin",
+            appliedMarkup: "",
+          }
+        : null
+    )
   }
 
   function resolveFromPrice(value: string) {
@@ -126,7 +149,15 @@ export function PricingDecision({ totalCost, onResolved }: PricingDecisionProps)
       value.trim() === "" || Number.isNaN(salePrice)
         ? null
         : calculatePricingFromSalePrice(totalCost, salePrice)
-    onResolved(result ? serializePercent(result.obtainedMargin) : "")
+    onResolved(
+      result
+        ? {
+            desiredMargin: serializePercent(result.obtainedMargin),
+            pricingPath: "sale-price",
+            appliedMarkup: "",
+          }
+        : null
+    )
   }
 
   function handleSelectGoal(nextGoal: PricingGoal) {
@@ -144,7 +175,7 @@ export function PricingDecision({ totalCost, onResolved }: PricingDecisionProps)
       resolveFromMargin(marginInput)
       return
     }
-    onResolved("")
+    onResolved(null)
   }
 
   function handleSelectMethod(nextMethod: PriceDefineMethod) {

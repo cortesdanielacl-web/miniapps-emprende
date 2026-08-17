@@ -16,6 +16,18 @@ export function formatMarginPercent(margin: number): string {
   return `${margin}%`
 }
 
+/** Porcentaje de presentación (es-CL, 1 decimal). No altera el valor interno. */
+export function formatPercentOneDecimal(value: number): string {
+  if (!Number.isFinite(value)) {
+    return "—"
+  }
+
+  return `${new Intl.NumberFormat("es-CL", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(value)}%`
+}
+
 /** Formato de cantidad para informe (máx. 3 decimales útiles). */
 export function formatQuantity(value: number | null): string {
   if (value == null || !Number.isFinite(value)) {

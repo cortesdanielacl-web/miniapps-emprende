@@ -6,10 +6,11 @@
 import type { CostBreakdownLine } from "@/features/calculadora-costos/cost-aggregation"
 import {
   formatClp,
-  formatMarginPercent,
+  formatPercentOneDecimal,
   formatQuantity,
 } from "@/features/calculadora-costos/format-money"
 import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
+import type { PricingPath } from "@/features/calculadora-costos/schema"
 import type {
   PdfBrand,
   PdfReportDefinition,
@@ -142,6 +143,48 @@ function buildMiniAppsBrand(logoSrc?: string | null): PdfBrand {
   }
 }
 
+function pricingPresentation(report: ProfessionalReport): {
+  priceLabel: string
+  priceSummaryLabel: string
+  marginLabel: string
+  marginValue: string
+  recommendationsTitle: string
+} {
+  const path: PricingPath = report.pricingPath
+  const marginPct = formatPercentOneDecimal(report.margin)
+
+  if (path === "markup") {
+    return {
+      priceLabel: "Precio de venta calculado",
+      priceSummaryLabel: "Precio calculado",
+      marginLabel: "Recargo aplicado",
+      marginValue:
+        report.appliedMarkup == null
+          ? "—"
+          : formatPercentOneDecimal(report.appliedMarkup),
+      recommendationsTitle: "Precio calculado",
+    }
+  }
+
+  if (path === "sale-price") {
+    return {
+      priceLabel: "Precio de venta",
+      priceSummaryLabel: "Precio de venta",
+      marginLabel: "Margen obtenido",
+      marginValue: marginPct,
+      recommendationsTitle: "Resultado de tu precio",
+    }
+  }
+
+  return {
+    priceLabel: "Precio de venta recomendado",
+    priceSummaryLabel: "Precio recomendado",
+    marginLabel: "Margen objetivo",
+    marginValue: marginPct,
+    recommendationsTitle: "Precio recomendado",
+  }
+}
+
 /**
  * Adapter: resultado de cálculo → definición del motor PDF.
  */
@@ -157,6 +200,8 @@ export function buildCostReportDefinition(
   const laborLines = ensureLines(report.laborLines)
   const indirectLines = ensureLines(report.indirectLines)
   const generatedAtLabel = formatReportGeneratedAt(generatedAt)
+  const copy = pricingPresentation(report)
+  const salePrice = formatClp(report.netSalePrice)
 
   return {
     brand: buildMiniAppsBrand(options?.logoSrc),
@@ -171,13 +216,13 @@ export function buildCostReportDefinition(
       { label: "Costo total", value: formatClp(report.totalCost) },
       { label: "Costo unitario", value: formatClp(report.unitCost) },
       {
-        label: "Precio de venta recomendado",
-        value: formatClp(report.finalSalePrice),
+        label: copy.priceLabel,
+        value: salePrice,
         color: BRAND_COLOR,
       },
       {
-        label: "Margen esperado",
-        value: formatMarginPercent(report.margin),
+        label: copy.marginLabel,
+        value: copy.marginValue,
       },
       {
         label: "Ganancia por unidad",
@@ -212,13 +257,13 @@ export function buildCostReportDefinition(
         { label: "Costo total", value: formatClp(report.totalCost) },
         { label: "Costo por unidad", value: formatClp(report.unitCost) },
         {
-          label: "Precio recomendado",
-          value: formatClp(report.finalSalePrice),
+          label: copy.priceSummaryLabel,
+          value: salePrice,
           emphasize: true,
         },
         {
-          label: "Margen",
-          value: formatMarginPercent(report.margin),
+          label: copy.marginLabel,
+          value: copy.marginValue,
         },
         {
           label: "Ganancia",
@@ -227,11 +272,11 @@ export function buildCostReportDefinition(
         },
         {
           label: "Rentabilidad",
-          value: formatMarginPercent(Math.round(report.profitability * 10) / 10),
+          value: formatPercentOneDecimal(report.profitability),
         },
       ],
     },
-    recommendationsTitle: "Recomendaciones",
+    recommendationsTitle: copy.recommendationsTitle,
     recommendations: report.recommendations,
   }
 }
