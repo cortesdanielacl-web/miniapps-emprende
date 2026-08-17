@@ -1,16 +1,16 @@
 /**
  * Checkout comercial (licencia de MiniApp).
  *
- * Flujo único:
- * 1) Guardar inputs del formulario (no resultados premium)
- * 2) Abrir Link de Pago Transbank
- * 3) Postventa → /compra/confirmacion (getConfirmationPath)
+ * Flujo Webpay Plus:
+ * 1) Guardar inputs del formulario
+ * 2) Crear transacción en /api/webpay/create
+ * 3) Enviar token_ws al formulario de Webpay Plus
+ * 4) Webpay retorna a /api/webpay/commit
  *
  * El acceso premium solo lo decide premiumAccessService → hasProductAccess.
  */
 
 import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
-import { getCheckoutUrl } from "@/config/commercial"
 
 export const PENDING_CHECKOUT_CONTEXT_KEY = "miniapps:pending-checkout-context"
 
@@ -82,14 +82,52 @@ export type StartReportCheckoutOptions = {
 }
 
 /**
- * Inicia el checkout comercial (Link de Pago).
- * Postventa única: /compra/confirmacion (configurar retorno en Transbank).
+ * Inicia el checkout mediante Webpay Plus.
  */
 export async function startReportCheckout(
   options: StartReportCheckoutOptions
 ): Promise<void> {
   savePendingCheckoutContext({ values: options.values })
 
-  const checkoutUrl = getCheckoutUrl()
-  window.open(checkoutUrl, "_blank", "noopener,noreferrer")
+  const response = await fetch("/api/webpay/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      values: options.values,
+    }),
+  })
+
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error("Debes iniciar sesión para continuar con la compra.")
+    }
+
+    throw new Error("No fue posible iniciar el pago.")
+  }
+
+  const data = (await response.json()) as {
+    url?: string
+    token?: string
+  }
+
+  if (!data.url || !data.token) {
+    throw new Error("Webpay no devolvió los datos necesarios para continuar.")
+  }
+
+  const form = document.createElement("form")
+  form.method = "POST"
+  form.action = data.url
+  form.style.display = "none"
+
+  const tokenInput = document.createElement("input")
+  tokenInput.type = "hidden"
+  tokenInput.name = "token_ws"
+  tokenInput.value = data.token
+
+  form.appendChild(tokenInput)
+  document.body.appendChild(form)
+
+  form.submit()
 }
