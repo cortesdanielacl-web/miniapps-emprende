@@ -22,7 +22,7 @@ function Header({
   title = APP_NAME,
   ...props
 }: HeaderProps) {
-  const { isAuthenticated, loading, logout } = useAuth()
+  const { isAuthenticated, loading, logout, user } = useAuth()
 
   async function handleLogout() {
     await logout()
@@ -64,15 +64,25 @@ function Header({
           </Link>
 
           {!loading && isAuthenticated ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="w-full justify-center sm:w-auto"
-            >
-              Cerrar sesión
-            </Button>
+            <div className="flex min-w-0 w-full items-center gap-2 sm:w-auto sm:gap-3">
+              {user?.email ? (
+                <p
+                  className="min-w-0 flex-1 truncate text-xs text-muted-foreground sm:flex-none sm:max-w-[18rem] sm:text-sm"
+                  title={user.email}
+                >
+                  {user.email}
+                </p>
+              ) : null}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="shrink-0"
+              >
+                Cerrar sesión
+              </Button>
+            </div>
           ) : null}
 
           {!loading && !isAuthenticated ? (
