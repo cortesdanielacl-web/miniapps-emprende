@@ -15,10 +15,10 @@ import { startReportCheckout } from "@/features/calculadora-costos/services/repo
 import { cn } from "@/lib/utils"
 
 const LOCKED_INSIGHTS = [
-  "Precio recomendado",
-  "Margen esperado",
-  "Utilidad",
-  "Rentabilidad",
+  "Precio de venta",
+  "Ganancia",
+  "Margen",
+  "Recargo",
 ] as const
 
 type ReportUnlockScreenProps = {

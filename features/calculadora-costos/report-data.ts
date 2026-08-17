@@ -201,7 +201,11 @@ export function buildCostReportDefinition(
   const indirectLines = ensureLines(report.indirectLines)
   const generatedAtLabel = formatReportGeneratedAt(generatedAt)
   const copy = pricingPresentation(report)
-  const salePrice = formatClp(report.netSalePrice)
+  const salePrice = formatClp(
+    report.pricingPath === "sale-price"
+      ? report.netSalePrice
+      : report.finalSalePrice
+  )
 
   return {
     brand: buildMiniAppsBrand(options?.logoSrc),

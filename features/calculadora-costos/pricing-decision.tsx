@@ -24,6 +24,8 @@ export type PricingResolution = {
 
 type PricingDecisionProps = {
   totalCost: number
+  /** Fail closed: sin acceso premium no se muestran resultados de pricing. */
+  canViewPremiumResults: boolean
   onResolved: (resolution: PricingResolution | null) => void
 }
 
@@ -76,7 +78,24 @@ function ChoiceCard({
   )
 }
 
-export function PricingDecision({ totalCost, onResolved }: PricingDecisionProps) {
+function LockedPricingResult() {
+  return (
+    <div className="mt-5 rounded-[14px] border border-dashed border-[#E8EEF5] bg-white px-4 py-5 sm:px-5">
+      <p className="font-heading text-sm font-semibold text-heading sm:text-base">
+        🔒 Tu resultado está listo
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        Compra la MiniApp para conocer tu precio de venta, ganancia y margen.
+      </p>
+    </div>
+  )
+}
+
+export function PricingDecision({
+  totalCost,
+  canViewPremiumResults,
+  onResolved,
+}: PricingDecisionProps) {
   const [goal, setGoal] = useState<PricingGoal | null>(null)
   const [defineMethod, setDefineMethod] = useState<PriceDefineMethod | null>(
     null
@@ -313,53 +332,79 @@ export function PricingDecision({ totalCost, onResolved }: PricingDecisionProps)
           </div>
         ) : null}
 
-        {fromMarkup ? (
-          <div className="mt-5 rounded-[14px] border border-[#E8EEF5] bg-white px-4 py-2 sm:px-5">
-            <ResultRow label="Costo total" value={formatClp(fromMarkup.totalCost)} />
-            <ResultRow
-              label="Precio de venta"
-              value={formatClp(fromMarkup.suggestedNetPrice)}
-            />
-            <ResultRow label="Ganancia" value={formatClp(fromMarkup.profit)} />
-            <ResultRow
-              label="Margen sobre venta"
-              value={formatPricingPercent(fromMarkup.saleMargin)}
-            />
-          </div>
-        ) : null}
+        {fromMarkup || fromMargin || fromPrice ? (
+          canViewPremiumResults ? (
+            <>
+              {fromMarkup ? (
+                <div className="mt-5 rounded-[14px] border border-[#E8EEF5] bg-white px-4 py-2 sm:px-5">
+                  <ResultRow
+                    label="Costo total"
+                    value={formatClp(fromMarkup.totalCost)}
+                  />
+                  <ResultRow
+                    label="Precio de venta"
+                    value={formatClp(fromMarkup.suggestedNetPrice)}
+                  />
+                  <ResultRow
+                    label="Ganancia"
+                    value={formatClp(fromMarkup.profit)}
+                  />
+                  <ResultRow
+                    label="Margen sobre venta"
+                    value={formatPricingPercent(fromMarkup.saleMargin)}
+                  />
+                </div>
+              ) : null}
 
-        {fromMargin ? (
-          <div className="mt-5 rounded-[14px] border border-[#E8EEF5] bg-white px-4 py-2 sm:px-5">
-            <ResultRow label="Costo total" value={formatClp(fromMargin.totalCost)} />
-            <ResultRow
-              label="Precio de venta"
-              value={formatClp(fromMargin.suggestedNetPrice)}
-            />
-            <ResultRow label="Ganancia" value={formatClp(fromMargin.profit)} />
-            <ResultRow
-              label="Recargo sobre costo"
-              value={formatPricingPercent(fromMargin.costMarkup)}
-            />
-          </div>
-        ) : null}
+              {fromMargin ? (
+                <div className="mt-5 rounded-[14px] border border-[#E8EEF5] bg-white px-4 py-2 sm:px-5">
+                  <ResultRow
+                    label="Costo total"
+                    value={formatClp(fromMargin.totalCost)}
+                  />
+                  <ResultRow
+                    label="Precio de venta"
+                    value={formatClp(fromMargin.suggestedNetPrice)}
+                  />
+                  <ResultRow
+                    label="Ganancia"
+                    value={formatClp(fromMargin.profit)}
+                  />
+                  <ResultRow
+                    label="Recargo sobre costo"
+                    value={formatPricingPercent(fromMargin.costMarkup)}
+                  />
+                </div>
+              ) : null}
 
-        {fromPrice ? (
-          <div className="mt-5 rounded-[14px] border border-[#E8EEF5] bg-white px-4 py-2 sm:px-5">
-            <ResultRow label="Costo total" value={formatClp(fromPrice.totalCost)} />
-            <ResultRow
-              label="Precio de venta"
-              value={formatClp(fromPrice.salePrice)}
-            />
-            <ResultRow label="Ganancia" value={formatClp(fromPrice.profit)} />
-            <ResultRow
-              label="Margen sobre venta"
-              value={formatPricingPercent(fromPrice.obtainedMargin)}
-            />
-            <ResultRow
-              label="Recargo sobre costo"
-              value={formatPricingPercent(fromPrice.obtainedMarkup)}
-            />
-          </div>
+              {fromPrice ? (
+                <div className="mt-5 rounded-[14px] border border-[#E8EEF5] bg-white px-4 py-2 sm:px-5">
+                  <ResultRow
+                    label="Costo total"
+                    value={formatClp(fromPrice.totalCost)}
+                  />
+                  <ResultRow
+                    label="Precio de venta"
+                    value={formatClp(fromPrice.salePrice)}
+                  />
+                  <ResultRow
+                    label="Ganancia"
+                    value={formatClp(fromPrice.profit)}
+                  />
+                  <ResultRow
+                    label="Margen sobre venta"
+                    value={formatPricingPercent(fromPrice.obtainedMargin)}
+                  />
+                  <ResultRow
+                    label="Recargo sobre costo"
+                    value={formatPricingPercent(fromPrice.obtainedMarkup)}
+                  />
+                </div>
+              ) : null}
+            </>
+          ) : (
+            <LockedPricingResult />
+          )
         ) : null}
       </div>
     </section>

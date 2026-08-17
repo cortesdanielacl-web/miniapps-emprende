@@ -45,18 +45,19 @@ function resolveAppliedMarkup(
 
 function buildRecommendations(
   path: PricingPath,
+  finalSalePrice: number,
   netSalePrice: number,
   profit: number,
   margin: number
 ): string {
-  const price = formatClp(netSalePrice)
+  const chargePrice = formatClp(finalSalePrice)
   if (path === "markup") {
-    return `Con los costos ingresados y el recargo definido, el precio calculado para tu producto es de ${price}.`
+    return `Con los costos ingresados y el recargo definido, el precio de venta calculado para tu producto es de ${chargePrice}, IVA incluido.`
   }
   if (path === "sale-price") {
-    return `Con un precio de venta de ${price}, obtienes una ganancia de ${formatClp(profit)} y un margen de ${formatPercentOneDecimal(margin)}.`
+    return `Con un precio de venta de ${formatClp(netSalePrice)}, obtienes una ganancia de ${formatClp(profit)} y un margen de ${formatPercentOneDecimal(margin)}.`
   }
-  return `Para alcanzar el margen objetivo definido, el precio calculado para tu producto es de ${price}.`
+  return `Para alcanzar el margen objetivo definido, el precio de venta calculado para tu producto es de ${chargePrice}, IVA incluido.`
 }
 
 /**
@@ -99,6 +100,7 @@ export function calculateProfessionalReport(
     profitability,
     recommendations: buildRecommendations(
       pricingPath,
+      finalSalePrice,
       netSalePrice,
       profit,
       safeMargin

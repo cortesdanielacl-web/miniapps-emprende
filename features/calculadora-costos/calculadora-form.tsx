@@ -407,6 +407,7 @@ export function CostCalculatorForm() {
         <PricingDecision
           key={costRunId}
           totalCost={preview.totalCost}
+          canViewPremiumResults={hasAccess}
           onResolved={handlePricingResolved}
         />
       ) : null}
