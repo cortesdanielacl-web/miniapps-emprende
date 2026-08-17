@@ -26,9 +26,16 @@ const requiredPositiveNumber = (message: string) =>
     message: "Debe ser mayor que cero",
   })
 
-const requiredMargin = (message: string) =>
-  requiredNonNegativeNumber(message).refine((value) => Number(value) <= 500, {
-    message: "Ingresa un margen válido.",
+/** Margen opcional en el paso de costos; se completa en “¿Qué quieres calcular?”. */
+const optionalDesiredMargin = z
+  .string()
+  .trim()
+  .refine(
+    (value) => value === "" || !Number.isNaN(Number(value)),
+    { message: "Ingresa un número válido" }
+  )
+  .refine((value) => value === "" || Number(value) < 100, {
+    message: "El margen debe ser menor que 100%.",
   })
 
 export const unitSchema = z.enum(UNITS)
@@ -80,7 +87,7 @@ export const costCalculatorSchema = z.object({
   rawMaterials: rawMaterialsSchema,
   laborItems: costLinesSchema,
   indirectItems: costLinesSchema,
-  desiredMargin: requiredMargin("El margen de ganancia es obligatorio"),
+  desiredMargin: optionalDesiredMargin,
 })
 
 export type CostCalculatorValues = z.infer<typeof costCalculatorSchema>

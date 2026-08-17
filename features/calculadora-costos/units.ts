@@ -1,12 +1,13 @@
-export const UNITS = ["g", "kg", "ml", "l", "unidad"] as const
+export const UNITS = ["g", "kg", "ml", "l", "cm", "m", "unidad"] as const
 
 export type Unit = (typeof UNITS)[number]
 
-export type UnitFamily = "mass" | "volume" | "count"
+export type UnitFamily = "mass" | "volume" | "length" | "count"
 
 export function getUnitFamily(unit: Unit): UnitFamily {
   if (unit === "g" || unit === "kg") return "mass"
   if (unit === "ml" || unit === "l") return "volume"
+  if (unit === "cm" || unit === "m") return "length"
   return "count"
 }
 
@@ -14,15 +15,18 @@ export function areUnitsCompatible(a: Unit, b: Unit): boolean {
   return getUnitFamily(a) === getUnitFamily(b)
 }
 
-/** Convierte a unidad base: g, ml o unidad. */
+/** Convierte a unidad base: g, ml, cm o unidad. */
 export function toBaseUnit(quantity: number, unit: Unit): number {
   switch (unit) {
     case "kg":
       return quantity * 1000
     case "l":
       return quantity * 1000
+    case "m":
+      return quantity * 100
     case "g":
     case "ml":
+    case "cm":
     case "unidad":
       return quantity
   }

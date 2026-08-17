@@ -1,27 +1,52 @@
-import {
-  formatClp,
-  formatMarginPercent,
-} from "@/features/calculadora-costos/format-money"
+import { formatClp } from "@/features/calculadora-costos/format-money"
 import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
 
-export type ReportMetric = {
+export type ReportRow = {
   label: string
   value: string
-  emphasize?: boolean
+  hint?: string
+}
+
+export type CostBreakdownRow = {
+  label: string
+  value: string
+  share: string | null
 }
 
 /**
  * Vista de presentación del Informe Profesional (web).
- * Solo a partir de ProfessionalReport autorizado por la API.
+ * Solo formatea ProfessionalReport autorizado. No recalcula.
+ * Rentabilidad se omite aquí y permanece en el PDF.
  */
 export type ProfessionalReportView = {
   productName: string
-  description: string
-  reportTitle: string
-  finalSalePriceLabel: string
-  finalSalePrice: string
-  finalSalePriceNote: string
-  metrics: ReportMetric[]
+  title: string
+  subtitle: string
+  hero: {
+    finalSalePriceLabel: string
+    finalSalePrice: string
+    finalSalePriceNote: string
+    totalCostLabel: string
+    totalCost: string
+    totalCostNote: string
+  }
+  breakdown: CostBreakdownRow[]
+  keyResults: ReportRow[]
+  interpretation: string[]
+}
+
+function formatViewPercent(value: number): string {
+  return `${new Intl.NumberFormat("es-CL", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  }).format(value)}%`
+}
+
+function costShare(part: number, total: number): string | null {
+  if (!(total > 0) || !Number.isFinite(part)) {
+    return null
+  }
+  return formatViewPercent((part / total) * 100)
 }
 
 export function buildProfessionalReportView(
@@ -29,58 +54,61 @@ export function buildProfessionalReportView(
 ): ProfessionalReportView {
   return {
     productName: report.productName,
-    description: "Resumen del cálculo de tu producto.",
-    reportTitle: "Informe Profesional de Costos",
-    finalSalePriceLabel: "Precio Final",
-    finalSalePrice: formatClp(report.finalSalePrice),
-    finalSalePriceNote: "Incluye IVA.",
-    metrics: [
+    title: "Resumen de tu producto",
+    subtitle:
+      "Aquí puedes ver el total de tus costos y el resultado de tu cálculo.",
+    hero: {
+      finalSalePriceLabel: "Precio final",
+      finalSalePrice: formatClp(report.finalSalePrice),
+      finalSalePriceNote: "Incluye IVA (19%)",
+      totalCostLabel: "Costo total",
+      totalCost: formatClp(report.totalCost),
+      totalCostNote: "Sin IVA",
+    },
+    breakdown: [
       {
-        label: "Costo de Materias Primas",
+        label: "Materiales e Insumos",
         value: formatClp(report.rawMaterialsTotal),
+        share: costShare(report.rawMaterialsTotal, report.totalCost),
       },
       {
         label: "Mano de Obra",
         value: formatClp(report.laborTotal),
+        share: costShare(report.laborTotal, report.totalCost),
       },
       {
         label: "Costos Indirectos",
         value: formatClp(report.indirectTotal),
+        share: costShare(report.indirectTotal, report.totalCost),
       },
-      {
-        label: "Costo Total",
-        value: formatClp(report.totalCost),
-        emphasize: true,
-      },
+    ],
+    keyResults: [
       {
         label: "Margen",
-        value: formatMarginPercent(report.margin),
+        value: Number.isFinite(report.margin)
+          ? formatViewPercent(report.margin)
+          : "—",
       },
       {
         label: "Utilidad",
         value: formatClp(report.profit),
-        emphasize: true,
       },
       {
-        label: "Rentabilidad",
-        value: formatMarginPercent(
-          Math.round(report.profitability * 10) / 10
-        ),
-      },
-      {
-        label: "Precio Neto",
+        label: "Precio neto",
         value: formatClp(report.netSalePrice),
-        emphasize: true,
       },
       {
         label: "IVA (19%)",
         value: formatClp(report.iva),
       },
       {
-        label: "Precio Final",
+        label: "Precio final",
         value: formatClp(report.finalSalePrice),
-        emphasize: true,
       },
+    ],
+    interpretation: [
+      "Este es el precio recomendado para tu producto, con IVA incluido.",
+      "El costo total no incluye IVA; el precio final sí lo considera.",
     ],
   }
 }

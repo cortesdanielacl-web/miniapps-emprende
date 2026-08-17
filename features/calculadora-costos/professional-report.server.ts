@@ -7,6 +7,10 @@ import "server-only"
 
 import { aggregateCosts } from "@/features/calculadora-costos/cost-aggregation"
 import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
+import {
+  netSalePriceFromMargin,
+  profitFromNetPrice,
+} from "@/features/calculadora-costos/pricing"
 import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
 import { formatClp } from "@/features/calculadora-costos/format-money"
 
@@ -23,10 +27,11 @@ export function calculateProfessionalReport(
   const margin = Number(values.desiredMargin)
   const safeMargin = Number.isFinite(margin) ? margin : 0
 
-  const netSalePrice = agg.totalCost * (1 + safeMargin / 100)
+  const netSalePrice =
+    netSalePriceFromMargin(agg.totalCost, safeMargin) ?? agg.totalCost
   const iva = netSalePrice * IVA_RATE
   const finalSalePrice = netSalePrice + iva
-  const profit = netSalePrice - agg.totalCost
+  const profit = profitFromNetPrice(agg.totalCost, netSalePrice)
   const profitability =
     agg.totalCost > 0 ? (profit / agg.totalCost) * 100 : 0
 

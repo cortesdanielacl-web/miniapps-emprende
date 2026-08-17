@@ -93,7 +93,7 @@ export function RawMaterialsList() {
     <div className="flex min-h-0 flex-col gap-4 sm:gap-6">
       <div
         ref={scrollRef}
-        className="max-h-[min(18rem,45dvh)] min-h-0 space-y-4 overflow-y-auto overflow-x-hidden overscroll-contain pr-0.5 sm:max-h-[24rem] sm:space-y-5 sm:pr-1"
+        className="h-auto max-h-none space-y-4 overflow-y-visible sm:space-y-5"
       >
         {fields.map((field, index) => (
           <div

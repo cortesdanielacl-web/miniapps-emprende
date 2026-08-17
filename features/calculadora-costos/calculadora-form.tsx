@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type ComponentType } from "react"
+import { useEffect, useState, type ComponentType } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm, useWatch } from "react-hook-form"
 import {
@@ -26,6 +26,7 @@ import {
   type CostPreview,
 } from "@/features/calculadora-costos/cost-preview"
 import type { ProfessionalReport } from "@/features/calculadora-costos/professional-report"
+import { PricingDecision } from "@/features/calculadora-costos/pricing-decision"
 import { RawMaterialsList } from "@/features/calculadora-costos/raw-materials-list"
 import { ReportUnlockScreen } from "@/features/calculadora-costos/report-unlock-screen"
 import {
@@ -83,6 +84,8 @@ export function CostCalculatorForm() {
   const [reportLoading, setReportLoading] = useState(false)
   const [reportError, setReportError] = useState<string | null>(null)
   const [openSection, setOpenSection] = useState("materia-prima")
+  const [costRunId, setCostRunId] = useState(0)
+  const [pricingMargin, setPricingMargin] = useState("")
 
   const form = useForm<CostCalculatorValues>({
     resolver: zodResolver(costCalculatorSchema),
@@ -108,43 +111,70 @@ export function CostCalculatorForm() {
 
   async function onSubmit(values: CostCalculatorValues) {
     setCalculatedValues(values)
+    setPricingMargin("")
+    setProfessionalReport(null)
     setReportError(null)
+    setCostRunId((runId) => runId + 1)
     // Solo inputs — nunca ProfessionalReport en sessionStorage.
     savePendingCheckoutContext({ values })
 
     // Nivel 1: siempre CostPreview en cliente (sin pricing premium).
     const nextPreview = calculateCostPreview(values)
+    setPreview(nextPreview)
+    requestAnimationFrame(() => {
+      document
+        .getElementById("precio-margen")
+        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+    })
+  }
 
-    if (!hasAccess) {
-      setProfessionalReport(null)
-      setPreview(nextPreview)
-      requestAnimationFrame(() => {
-        document
-          .getElementById("desbloqueo")
-          ?.scrollIntoView({ behavior: "smooth", block: "start" })
-      })
+  useEffect(() => {
+    if (!hasAccess || !calculatedValues || pricingMargin === "") {
       return
     }
 
-    // Nivel 2: ProfessionalReport solo desde el servidor autorizado.
-    setPreview(null)
-    setReportLoading(true)
-    try {
-      const report = await fetchProfessionalReport(values)
-      setProfessionalReport(report)
-      requestAnimationFrame(() => {
-        document
-          .getElementById("resultado")
-          ?.scrollIntoView({ behavior: "smooth", block: "start" })
-      })
-    } catch {
+    const values: CostCalculatorValues = {
+      ...calculatedValues,
+      desiredMargin: pricingMargin,
+    }
+    savePendingCheckoutContext({ values })
+
+    let cancelled = false
+    const timeoutId = window.setTimeout(() => {
+      setReportError(null)
+      setReportLoading(true)
+      void fetchProfessionalReport(values)
+        .then((report) => {
+          if (cancelled) return
+          setProfessionalReport(report)
+        })
+        .catch(() => {
+          if (cancelled) return
+          setProfessionalReport(null)
+          setReportError(
+            "No se pudo obtener el Informe Profesional. Verifica tu licencia e inténtalo de nuevo."
+          )
+        })
+        .finally(() => {
+          if (!cancelled) setReportLoading(false)
+        })
+    }, 400)
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(timeoutId)
+    }
+  }, [calculatedValues, hasAccess, pricingMargin])
+
+  function handlePricingResolved(desiredMargin: string) {
+    setPricingMargin(desiredMargin)
+    if (!desiredMargin) {
       setProfessionalReport(null)
-      setPreview(nextPreview)
-      setReportError(
-        "No se pudo obtener el Informe Profesional. Verifica tu licencia e inténtalo de nuevo."
-      )
-    } finally {
-      setReportLoading(false)
+    }
+    if (calculatedValues) {
+      savePendingCheckoutContext({
+        values: { ...calculatedValues, desiredMargin },
+      })
     }
   }
 
@@ -153,6 +183,7 @@ export function CostCalculatorForm() {
     setCalculatedValues(null)
     setProfessionalReport(null)
     setPreview(null)
+    setPricingMargin("")
     setReportError(null)
     setOpenSection("materia-prima")
     form.setFocus("productName")
@@ -189,22 +220,15 @@ export function CostCalculatorForm() {
                 Tu producto
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Define qué vas a vender y el margen que deseas.
+                Define qué vas a vender.
               </p>
             </div>
           </div>
-          <div className="grid max-w-md gap-5 sm:grid-cols-2 sm:gap-6">
+          <div className="grid max-w-md gap-5">
             <FormField
               name="productName"
               label="Nombre del producto"
               placeholder="Ej. Vela artesanal"
-              required
-            />
-            <FormField
-              name="desiredMargin"
-              label="Margen de ganancia (%)"
-              type="number"
-              placeholder="0"
               required
             />
           </div>
@@ -345,10 +369,10 @@ export function CostCalculatorForm() {
             type="submit"
             variant="primary"
             size="lg"
-            disabled={reportLoading || accessLoading}
+            disabled={accessLoading}
             className="h-12 min-h-11 w-full bg-[#2563EB] px-6 text-base font-semibold shadow-[0_2px_10px_rgb(37_99_235/0.18)] hover:bg-[#1d4ed8] sm:h-14 sm:min-w-[13rem] sm:w-auto sm:px-10"
           >
-            {reportLoading ? "Generando informe…" : "Calcular"}
+            Calcular
           </Button>
           <Button
             type="button"
@@ -362,6 +386,20 @@ export function CostCalculatorForm() {
         </div>
       </Form>
 
+      {preview && calculatedValues ? (
+        <PricingDecision
+          key={costRunId}
+          totalCost={preview.totalCost}
+          onResolved={handlePricingResolved}
+        />
+      ) : null}
+
+      {hasAccess && pricingMargin && reportLoading ? (
+        <p className="text-center text-sm text-muted-foreground" aria-live="polite">
+          Generando informe…
+        </p>
+      ) : null}
+
       {reportError ? (
         <p className="text-center text-sm text-destructive" role="alert">
           {reportError}
@@ -370,14 +408,17 @@ export function CostCalculatorForm() {
 
       {/* Sin licencia: solo CostPreview + pantalla comercial. */}
       {showUnlockGate && preview && calculatedValues ? (
-        <ReportUnlockScreen preview={preview} values={calculatedValues} />
+        <ReportUnlockScreen
+          preview={preview}
+          values={{ ...calculatedValues, desiredMargin: pricingMargin }}
+        />
       ) : null}
 
       {/* Con licencia: solo ProfessionalReport de la API. */}
       {showFullReport && professionalReport && calculatedValues ? (
         <CalculatorResultsReport
           report={professionalReport}
-          values={calculatedValues}
+          values={{ ...calculatedValues, desiredMargin: pricingMargin }}
         />
       ) : null}
     </div>
