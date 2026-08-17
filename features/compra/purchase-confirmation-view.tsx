@@ -23,7 +23,19 @@ type TimelineStep = {
   marker: "done" | "current" | "todo"
 }
 
-function buildTimeline(status: LicenseUiStatus): TimelineStep[] {
+function buildTimeline(
+  status: LicenseUiStatus,
+  hasUnverifiedPurchase: boolean
+): TimelineStep[] {
+  if (status === "active" && hasUnverifiedPurchase) {
+    return [
+      { id: "account", label: "Cuenta creada", marker: "done" },
+      { id: "license", label: "Licencia activa", marker: "done" },
+      { id: "purchase", label: "Compra registrada", marker: "done" },
+      { id: "verify", label: "Verificando pago", marker: "current" },
+    ]
+  }
+
   if (status === "active") {
     return [
       { id: "account", label: "Cuenta creada", marker: "done" },
@@ -68,6 +80,7 @@ export function PurchaseConfirmationView() {
   const { isAuthenticated, loading: authLoading } = useAuth()
   const [status, setStatus] = useState<LicenseUiStatus>("pending")
   const [checkingLicense, setCheckingLicense] = useState(true)
+  const [pendingRecorded, setPendingRecorded] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -87,9 +100,14 @@ export function PurchaseConfirmationView() {
         }
 
         // Link de Pago / retorno postventa: registrar pending sin auto-activar.
-        if (isAuthenticated && !hasAccess) {
-          // Registra pending (Link de Pago). Webpay Plus ya lo hace en commit.
-          await registerPendingPurchaseFromCheckoutAction()
+        // hasPremiumAccess solo define el estado visual; no bloquea el registro.
+        let recorded = false
+        if (isAuthenticated) {
+          const result = await registerPendingPurchaseFromCheckoutAction()
+          recorded = Boolean(result.ok && result.data)
+        }
+        if (!cancelled) {
+          setPendingRecorded(recorded)
         }
       } finally {
         if (!cancelled) {
@@ -104,8 +122,9 @@ export function PurchaseConfirmationView() {
     }
   }, [isAuthenticated, authLoading])
 
-  const timeline = buildTimeline(status)
   const isActive = status === "active"
+  const hasUnverifiedPurchase = isActive && pendingRecorded
+  const timeline = buildTimeline(status, hasUnverifiedPurchase)
 
   const accountHref = isAuthenticated
     ? CALCULATOR_ENTRY_HREF
@@ -127,9 +146,11 @@ export function PurchaseConfirmationView() {
           Hemos recibido tu solicitud correctamente.
         </p>
         <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-foreground sm:text-base">
-          {isActive
-            ? "Tu licencia ya está activa. Puedes utilizar la MiniApp sin restricciones."
-            : "Estamos verificando tu pago para activar tu licencia."}
+          {hasUnverifiedPurchase
+            ? "Tu licencia actual sigue activa. La nueva compra quedó pendiente de verificación."
+            : isActive
+              ? "Tu licencia ya está activa. Puedes utilizar la MiniApp sin restricciones."
+              : "Estamos verificando tu pago para activar tu licencia."}
         </p>
       </div>
 
@@ -175,6 +196,21 @@ export function PurchaseConfirmationView() {
           </div>
         )}
       </div>
+
+      {hasUnverifiedPurchase && !checkingLicense ? (
+        <div
+          className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9"
+          aria-live="polite"
+        >
+          <p className="font-heading text-base font-semibold text-heading sm:text-lg">
+            🟡 Compra pendiente de verificación
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Registramos tu solicitud de compra. Tu licencia actual sigue activa.
+            El equipo verificará el pago y te informará cuando corresponda.
+          </p>
+        </div>
+      ) : null}
 
       {/* Línea de tiempo */}
       <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9">
