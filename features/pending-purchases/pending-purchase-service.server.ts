@@ -218,57 +218,32 @@ export const pendingPurchaseService = {
     }
   },
 
-  async registerFromCheckoutReturn(input: {
-    userId: string
-    email: string
-    customerName?: string | null
-  }): Promise<PendingPurchase | null> {
-    try {
-      const all = await pendingPurchaseRepository.listAll()
-      const open = all.find(
-        (row) =>
-          row.userId === input.userId &&
-          row.status === "pending" &&
-          (row.product === COMMERCIAL.productName ||
-            row.product === COMMERCIAL.productId)
-      )
-      if (open) {
-        return open
-      }
-
-      const buyOrder = `LP-${Date.now().toString(36).toUpperCase()}`
-      const purchase = await pendingPurchaseRepository.createPendingPurchase({
-        userId: input.userId,
-        email: input.email,
-        customerName: input.customerName ?? null,
-        product: COMMERCIAL.productName,
-        amount: COMMERCIAL.price,
-        transactionToken: null,
-        buyOrder,
-        paymentDate: new Date().toISOString(),
-      })
-
-      await notifySupportPending(purchase)
-      await notifyClientPurchaseConfirmation(purchase)
-      return purchase
-    } catch (error) {
-      // TEMP: ver error real de createPendingPurchase / listAll en Vercel
-      console.error("[registerFromCheckoutReturn]", error)
-      logSecurityError(
-        "pendingPurchaseService",
-        error,
-        "registerFromCheckoutReturn failed"
-      )
-      return null
-    }
-  },
-
   async listForAdmin(): Promise<PendingPurchase[]> {
     return pendingPurchaseRepository.listAll()
   },
 
   async getById(id: string): Promise<PendingPurchase | null> {
     return pendingPurchaseRepository.getById(id)
+  },
+
+  /** Solo lectura: compras comerciales ya registradas (p. ej. Webpay aprobado). */
+  async getConfirmationStateForUser(userId: string): Promise<{
+    hasPendingPurchase: boolean
+    hasActivatedPurchase: boolean
+  }> {
+    const rows = await pendingPurchaseRepository.listByUserId(userId)
+    const commercial = rows.filter(
+      (row) =>
+        row.product === COMMERCIAL.productName ||
+        row.product === COMMERCIAL.productId
+    )
+
+    return {
+      hasPendingPurchase: commercial.some((row) => row.status === "pending"),
+      hasActivatedPurchase: commercial.some(
+        (row) => row.status === "activated"
+      ),
+    }
   },
 
   async getDashboardStats(): Promise<BackofficeDashboardStats> {

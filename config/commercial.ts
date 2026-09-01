@@ -13,10 +13,9 @@ export const COMMERCIAL = {
   price: 5990,
   compareAtPrice: 14990,
   currency: "CLP",
-  paymentLink: "https://www.webpay.cl/form-pay/407579",
   paymentLabel: "Pago único. Sin suscripciones.",
   licenseLabel: "Licencia individual.",
-  /** Único retorno postventa (Link de Pago / Webpay Plus). */
+  /** Único retorno postventa (Webpay Plus commit). */
   confirmationPath: "/compra/confirmacion",
   licenseTypeLabel: "Individual",
   paymentTypeLabel: "Único",
@@ -33,14 +32,6 @@ export const COMMERCIAL = {
     "Licencia individual.",
   ],
 } as const
-
-/**
- * URL de checkout actual (Link de Pago Transbank).
- * Sustituir esta función al integrar Webpay Plus.
- */
-export function getCheckoutUrl(): string {
-  return COMMERCIAL.paymentLink
-}
 
 /** Ruta de confirmación postventa (gracias / activación pendiente). */
 export function getConfirmationPath(): string {

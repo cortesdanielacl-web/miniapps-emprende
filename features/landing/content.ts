@@ -7,7 +7,6 @@ import {
   COMMERCIAL,
   formatCommercialAmount,
   formatCommercialPrice,
-  getCheckoutUrl,
 } from "@/config/commercial"
 
 export const landingContent = {
@@ -77,7 +76,6 @@ export const landingContent = {
     benefits: [...COMMERCIAL.licenseBenefits],
     cta: {
       label: "Comprar ahora",
-      href: getCheckoutUrl(),
     },
     footnote: COMMERCIAL.paymentLabel,
   },

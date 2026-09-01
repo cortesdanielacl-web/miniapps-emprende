@@ -9,13 +9,23 @@ import {
   formatCommercialPrice,
 } from "@/config/commercial"
 import { COMPANY, getSupportEmailHref } from "@/config/company"
-import { CALCULATOR_ENTRY_HREF } from "@/config/routes"
+import {
+  CALCULATOR_ENTRY_HREF,
+  COMMERCIAL_CHECKOUT_HREF,
+} from "@/config/routes"
 import { useAuth } from "@/features/auth/use-auth"
 import { premiumAccessService } from "@/features/licensing/premium-access-service"
-import { registerPendingPurchaseFromCheckoutAction } from "@/features/pending-purchases/actions"
+import { getMyCommercialPurchaseStateAction } from "@/features/pending-purchases/actions"
 import { cn } from "@/lib/utils"
 
 type LicenseUiStatus = "pending" | "active"
+
+type ConfirmationMode =
+  | "loading"
+  | "none"
+  | "pending"
+  | "active"
+  | "active_with_pending"
 
 type TimelineStep = {
   id: string
@@ -73,19 +83,19 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 }
 
 /**
- * Pantalla postventa: tranquilidad + estado de licencia.
- * Pendiente hoy (activación manual); activa vía premiumAccessService.
+ * Pantalla postventa de solo lectura.
+ * No crea pending_purchases ni envía correos.
  */
 export function PurchaseConfirmationView() {
   const { isAuthenticated, loading: authLoading } = useAuth()
   const [status, setStatus] = useState<LicenseUiStatus>("pending")
+  const [hasPendingPurchase, setHasPendingPurchase] = useState(false)
   const [checkingLicense, setCheckingLicense] = useState(true)
-  const [pendingRecorded, setPendingRecorded] = useState(false)
 
   useEffect(() => {
     let cancelled = false
 
-    async function resolveLicenseStatus() {
+    async function resolveConfirmationState() {
       if (authLoading) {
         setCheckingLicense(true)
         return
@@ -95,20 +105,13 @@ export function PurchaseConfirmationView() {
       try {
         const hasAccess =
           await premiumAccessService.hasPremiumAccess(COMMERCIAL.productId)
-        if (!cancelled) {
-          setStatus(hasAccess ? "active" : "pending")
-        }
+        const purchaseState = await getMyCommercialPurchaseStateAction()
+        if (cancelled) return
 
-        // Link de Pago / retorno postventa: registrar pending sin auto-activar.
-        // hasPremiumAccess solo define el estado visual; no bloquea el registro.
-        let recorded = false
-        if (isAuthenticated) {
-          const result = await registerPendingPurchaseFromCheckoutAction()
-          recorded = Boolean(result.ok && result.data)
-        }
-        if (!cancelled) {
-          setPendingRecorded(recorded)
-        }
+        setStatus(hasAccess ? "active" : "pending")
+        setHasPendingPurchase(
+          Boolean(purchaseState.ok && purchaseState.data.hasPendingPurchase)
+        )
       } finally {
         if (!cancelled) {
           setCheckingLicense(false)
@@ -116,49 +119,78 @@ export function PurchaseConfirmationView() {
       }
     }
 
-    void resolveLicenseStatus()
+    void resolveConfirmationState()
     return () => {
       cancelled = true
     }
   }, [isAuthenticated, authLoading])
 
   const isActive = status === "active"
-  const hasUnverifiedPurchase = isActive && pendingRecorded
+  const hasUnverifiedPurchase = isActive && hasPendingPurchase
+
+  const mode: ConfirmationMode = checkingLicense
+    ? "loading"
+    : hasUnverifiedPurchase
+      ? "active_with_pending"
+      : isActive
+        ? "active"
+        : hasPendingPurchase
+          ? "pending"
+          : "none"
+
   const timeline = buildTimeline(status, hasUnverifiedPurchase)
+  const showPurchaseProgress = mode === "pending" || mode === "active" || mode === "active_with_pending"
 
   const accountHref = isAuthenticated
     ? CALCULATOR_ENTRY_HREF
     : `/login?next=${encodeURIComponent(CALCULATOR_ENTRY_HREF)}`
 
-  const primaryHref = isActive ? CALCULATOR_ENTRY_HREF : accountHref
-  const primaryLabel = isActive
-    ? "Comenzar a usar la MiniApp"
-    : "Ir a mi cuenta"
+  const primaryHref =
+    mode === "none"
+      ? isAuthenticated
+        ? COMMERCIAL_CHECKOUT_HREF
+        : `/login?next=${encodeURIComponent(COMMERCIAL_CHECKOUT_HREF)}`
+      : isActive
+        ? CALCULATOR_ENTRY_HREF
+        : accountHref
+
+  const primaryLabel =
+    mode === "none"
+      ? "Ir al pago"
+      : isActive
+        ? "Comenzar a usar la MiniApp"
+        : "Ir a mi cuenta"
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      {/* Encabezado */}
       <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-8 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
         <h1 className="font-heading text-xl font-semibold tracking-tight text-heading break-words sm:text-3xl">
-          🎉 ¡Gracias por tu compra!
+          {mode === "none"
+            ? "No hay una compra confirmada"
+            : "🎉 ¡Gracias por tu compra!"}
         </h1>
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground sm:mt-4 sm:text-base">
-          Hemos recibido tu solicitud correctamente.
+          {mode === "none"
+            ? "No encontramos un pago aprobado asociado a tu cuenta."
+            : "Hemos recibido tu solicitud correctamente."}
         </p>
         <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-foreground sm:text-base">
-          {hasUnverifiedPurchase
-            ? "Tu licencia actual sigue activa. La nueva compra quedó pendiente de verificación."
-            : isActive
-              ? "Tu licencia ya está activa. Puedes utilizar la MiniApp sin restricciones."
-              : "Estamos verificando tu pago para activar tu licencia."}
+          {mode === "loading"
+            ? "Revisando el estado de tu compra…"
+            : mode === "none"
+              ? "Si no completaste el pago en Webpay, no se registra una compra pendiente. Puedes intentarlo de nuevo cuando quieras."
+              : mode === "active_with_pending"
+                ? "Tu licencia actual sigue activa. La nueva compra quedó pendiente de verificación."
+                : isActive
+                  ? "Tu licencia ya está activa. Puedes utilizar la MiniApp sin restricciones."
+                  : "Estamos verificando tu pago para activar tu licencia."}
         </p>
       </div>
 
-      {/* Estado de licencia */}
       <div
         className={cn(
           "rounded-[18px] border px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9",
-          isActive
+          isActive && mode !== "none"
             ? "border-brand-turquoise/30 bg-[#F0FDFA]"
             : "border-[#E8EEF5] bg-white"
         )}
@@ -167,13 +199,21 @@ export function PurchaseConfirmationView() {
         <p className="font-heading text-base font-semibold text-heading sm:text-lg">
           {checkingLicense
             ? "Revisando estado de tu licencia…"
-            : isActive
-              ? "🟢 Licencia activa"
-              : "🟡 Licencia pendiente de activación"}
+            : mode === "none"
+              ? "Sin pago aprobado"
+              : isActive
+                ? "🟢 Licencia activa"
+                : "🟡 Licencia pendiente de activación"}
         </p>
         {!checkingLicense && (
           <div className="mt-4 space-y-3 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            {isActive ? (
+            {mode === "none" ? (
+              <p>
+                Una compra solo se registra después de que Webpay Plus autorice
+                el pago. Visitar esta página no genera una orden ni envía
+                correos.
+              </p>
+            ) : isActive ? (
               <p>
                 Ya puedes calcular sin límites y generar Informes Profesionales
                 PDF ilimitados.
@@ -197,7 +237,7 @@ export function PurchaseConfirmationView() {
         )}
       </div>
 
-      {hasUnverifiedPurchase && !checkingLicense ? (
+      {mode === "active_with_pending" && !checkingLicense ? (
         <div
           className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9"
           aria-live="polite"
@@ -206,59 +246,60 @@ export function PurchaseConfirmationView() {
             🟡 Compra pendiente de verificación
           </p>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Registramos tu solicitud de compra. Tu licencia actual sigue activa.
+            Registramos tu pago aprobado. Tu licencia actual sigue activa.
             El equipo verificará el pago y te informará cuando corresponda.
           </p>
         </div>
       ) : null}
 
-      {/* Línea de tiempo */}
-      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9">
-        <h2 className="font-heading text-base font-semibold text-heading sm:text-lg">
-          Siguientes pasos
-        </h2>
-        <ol className="mt-5 space-y-3">
-          {timeline.map((step) => (
-            <li
-              key={step.id}
-              className={cn(
-                "flex items-center gap-3 text-sm sm:text-base",
-                step.marker === "todo"
-                  ? "text-muted-foreground/70"
-                  : "text-foreground"
-              )}
-            >
-              <span className="w-6 shrink-0 text-center" aria-hidden>
-                {timelineMarker(step.marker)}
-              </span>
-              <span
+      {showPurchaseProgress ? (
+        <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9">
+          <h2 className="font-heading text-base font-semibold text-heading sm:text-lg">
+            Siguientes pasos
+          </h2>
+          <ol className="mt-5 space-y-3">
+            {timeline.map((step) => (
+              <li
+                key={step.id}
                 className={cn(
-                  step.marker === "current" && "font-medium text-heading",
-                  step.marker === "done" && "text-foreground"
+                  "flex items-center gap-3 text-sm sm:text-base",
+                  step.marker === "todo"
+                    ? "text-muted-foreground/70"
+                    : "text-foreground"
                 )}
               >
-                {step.label}
-              </span>
-            </li>
-          ))}
-        </ol>
-      </div>
-
-      {/* Detalle de compra */}
-      <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9">
-        <h2 className="font-heading text-base font-semibold text-heading sm:text-lg">
-          Detalle de tu compra
-        </h2>
-        <div className="mt-5">
-          <InfoRow label="Producto" value={COMMERCIAL.productName} />
-          <InfoRow label="Licencia" value={COMMERCIAL.licenseTypeLabel} />
-          <InfoRow label="Precio" value={formatCommercialPrice()} />
-          <InfoRow label="Pago" value={COMMERCIAL.paymentTypeLabel} />
-          <InfoRow label="Suscripciones" value="Sin suscripciones" />
+                <span className="w-6 shrink-0 text-center" aria-hidden>
+                  {timelineMarker(step.marker)}
+                </span>
+                <span
+                  className={cn(
+                    step.marker === "current" && "font-medium text-heading",
+                    step.marker === "done" && "text-foreground"
+                  )}
+                >
+                  {step.label}
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
-      </div>
+      ) : null}
 
-      {/* Acciones */}
+      {showPurchaseProgress ? (
+        <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-7 shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-8 sm:py-9">
+          <h2 className="font-heading text-base font-semibold text-heading sm:text-lg">
+            Detalle de tu compra
+          </h2>
+          <div className="mt-5">
+            <InfoRow label="Producto" value={COMMERCIAL.productName} />
+            <InfoRow label="Licencia" value={COMMERCIAL.licenseTypeLabel} />
+            <InfoRow label="Precio" value={formatCommercialPrice()} />
+            <InfoRow label="Pago" value={COMMERCIAL.paymentTypeLabel} />
+            <InfoRow label="Suscripciones" value="Sin suscripciones" />
+          </div>
+        </div>
+      ) : null}
+
       <div className="rounded-[18px] border border-[#E8EEF5] bg-white px-4 py-8 text-center shadow-[0_2px_12px_rgb(15_44_76/0.04)] sm:px-10 sm:py-10">
         <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
           <Button
@@ -280,7 +321,6 @@ export function PurchaseConfirmationView() {
         </div>
       </div>
 
-      {/* Ayuda — solo correo electrónico */}
       <div className="rounded-[18px] border border-[#E8EEF5] bg-[#F7FAFF] px-4 py-7 sm:px-8 sm:py-9">
         <h2 className="font-heading text-base font-semibold text-heading sm:text-lg">
           ¿Necesitas ayuda?

@@ -188,6 +188,20 @@ export const pendingPurchaseRepository = {
     return ((data ?? []) as PendingPurchaseRow[]).map(mapPendingPurchase)
   },
 
+  async listByUserId(userId: string): Promise<PendingPurchase[]> {
+    const supabase = createServiceRoleClient()
+    const { data, error } = await supabase
+      .from("pending_purchases")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      throw new Error(`listByUserId: ${error.message}`)
+    }
+    return ((data ?? []) as PendingPurchaseRow[]).map(mapPendingPurchase)
+  },
+
   async markActivated(id: string): Promise<PendingPurchase> {
     const supabase = createServiceRoleClient()
     const now = new Date().toISOString()

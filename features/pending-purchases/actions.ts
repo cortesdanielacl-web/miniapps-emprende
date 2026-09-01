@@ -39,26 +39,32 @@ export async function activatePendingPurchaseAction(
   }
 }
 
+export type CommercialPurchaseConfirmationState = {
+  hasPendingPurchase: boolean
+  hasActivatedPurchase: boolean
+}
+
 /**
- * Tras retorno de Link de Pago / confirmación:
- * registra compra pending si el usuario está autenticado.
+ * Solo lectura para /compra/confirmacion.
+ * No crea pending_purchases ni envía correos.
  */
-export async function registerPendingPurchaseFromCheckoutAction(): Promise<
-  ActionResult<PendingPurchase | null>
+export async function getMyCommercialPurchaseStateAction(): Promise<
+  ActionResult<CommercialPurchaseConfirmationState>
 > {
   const user = await getCurrentUser()
-  if (!user?.id || !user.email) {
-    return { ok: false, error: "Debes iniciar sesión." }
+  if (!user?.id) {
+    return {
+      ok: true,
+      data: { hasPendingPurchase: false, hasActivatedPurchase: false },
+    }
   }
 
   try {
-    const purchase = await pendingPurchaseService.registerFromCheckoutReturn({
-      userId: user.id,
-      email: user.email,
-      customerName: user.name,
-    })
-    return { ok: true, data: purchase }
+    const data = await pendingPurchaseService.getConfirmationStateForUser(
+      user.id
+    )
+    return { ok: true, data }
   } catch {
-    return { ok: false, error: "No se pudo registrar la compra pendiente." }
+    return { ok: false, error: "No se pudo consultar el estado de la compra." }
   }
 }

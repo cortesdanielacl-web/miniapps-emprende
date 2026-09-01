@@ -2,7 +2,7 @@
  * Checkout comercial (licencia de MiniApp).
  *
  * Flujo Webpay Plus:
- * 1) Guardar inputs del formulario
+ * 1) Guardar inputs del formulario (si existen)
  * 2) Crear transacción en /api/webpay/create
  * 3) Enviar token_ws al formulario de Webpay Plus
  * 4) Webpay retorna a /api/webpay/commit
@@ -10,7 +10,10 @@
  * El acceso premium solo lo decide premiumAccessService → hasProductAccess.
  */
 
+import { COMMERCIAL } from "@/config/commercial"
+import { COMMERCIAL_CHECKOUT_HREF } from "@/config/routes"
 import type { CostCalculatorValues } from "@/features/calculadora-costos/schema"
+import { sanitizeNext } from "@/lib/navigation/safe-next"
 
 export const PENDING_CHECKOUT_CONTEXT_KEY = "miniapps:pending-checkout-context"
 
@@ -79,6 +82,29 @@ export function clearPendingCheckoutContext(): void {
 
 export type StartReportCheckoutOptions = {
   values: CostCalculatorValues
+  /** Destino interno tras login si /api/webpay/create responde 401. */
+  loginNext?: string
+}
+
+/**
+ * Payload mínimo que /api/webpay/create acepta (el monto sale de REPORT_PRICE).
+ */
+export function getCommercialCheckoutValues(): CostCalculatorValues {
+  return {
+    productName: COMMERCIAL.productName,
+    rawMaterials: [],
+    laborItems: [],
+    indirectItems: [],
+    desiredMargin: "",
+  }
+}
+
+function redirectToLogin(loginNext?: string): void {
+  if (typeof window === "undefined") return
+  const next = sanitizeNext(
+    loginNext ?? `${window.location.pathname}${window.location.search}`
+  )
+  window.location.assign(`/login?next=${encodeURIComponent(next)}`)
 }
 
 /**
@@ -101,7 +127,8 @@ export async function startReportCheckout(
 
   if (!response.ok) {
     if (response.status === 401) {
-      throw new Error("Debes iniciar sesión para continuar con la compra.")
+      redirectToLogin(options.loginNext)
+      return
     }
 
     throw new Error("No fue posible iniciar el pago.")
@@ -130,4 +157,12 @@ export async function startReportCheckout(
   document.body.appendChild(form)
 
   form.submit()
+}
+
+/** Checkout comercial desde landing u otras entradas sin formulario de costos. */
+export async function startCommercialCheckout(): Promise<void> {
+  await startReportCheckout({
+    values: getCommercialCheckoutValues(),
+    loginNext: COMMERCIAL_CHECKOUT_HREF,
+  })
 }

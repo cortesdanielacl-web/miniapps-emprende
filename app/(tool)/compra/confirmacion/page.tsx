@@ -10,9 +10,8 @@ export const metadata: Metadata = {
 }
 
 /**
- * Único retorno postventa (Link de Pago / Webpay Plus commit).
- * Configurar /compra/confirmacion como URL de redirección en Transbank.
- * /resultado-pago redirige aquí (308) por compatibilidad.
+ * Único retorno postventa (Webpay Plus commit).
+ * Solo lectura: no registra compras. /resultado-pago redirige aquí (308).
  */
 export default function CompraConfirmacionPage() {
   return (

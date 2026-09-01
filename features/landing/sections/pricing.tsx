@@ -1,9 +1,9 @@
 import { CheckIcon } from "lucide-react"
 
 import { PageContainer, PaymentTrustNotice } from "@/components/common"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { landingContent } from "@/features/landing/content"
+import { LandingBuyButton } from "@/features/landing/sections/landing-buy-button"
 
 const content = landingContent.pricing
 
@@ -57,20 +57,7 @@ export function LandingPricing() {
 
             <PaymentTrustNotice />
 
-            <Button
-              asChild
-              variant="primary"
-              size="lg"
-              className="w-full sm:w-auto sm:min-w-[15rem] sm:px-10"
-            >
-              <a
-                href={content.cta.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {content.cta.label}
-              </a>
-            </Button>
+            <LandingBuyButton label={content.cta.label} />
 
             <p className="text-xs text-muted-foreground sm:text-sm">
               {content.footnote}
