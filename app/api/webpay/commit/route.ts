@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { WebpayPlus } from "transbank-sdk"
 
 import { getConfirmationPath } from "@/config/commercial"
+import { applyWebpayResultCookie } from "@/features/compra/webpay-operation-result.server"
+import type { WebpayOperationOutcome } from "@/features/compra/webpay-operation-result"
 import { pendingPurchaseService } from "@/features/pending-purchases/pending-purchase-service.server"
 
 /**
@@ -44,15 +46,24 @@ function createWebpayTransaction() {
     : WebpayPlus.Transaction.buildForIntegration(commerceCode, apiKey)
 }
 
-function redirectToConfirmation() {
+function redirectToConfirmation(
+  outcome: WebpayOperationOutcome,
+  buyOrder?: string
+) {
   const appUrl = getRequiredEnv("APP_URL").replace(/\/$/, "")
   const destination = new URL(getConfirmationPath(), `${appUrl}/`)
-  return NextResponse.redirect(destination, 303)
+  destination.searchParams.set("status", outcome)
+  const response = NextResponse.redirect(destination, 303)
+  applyWebpayResultCookie(response, { outcome, buyOrder })
+  return response
 }
 
-function safeRedirectToConfirmation() {
+function safeRedirectToConfirmation(
+  outcome: WebpayOperationOutcome,
+  buyOrder?: string
+) {
   try {
-    return redirectToConfirmation()
+    return redirectToConfirmation(outcome, buyOrder)
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Configuración incompleta"
@@ -80,20 +91,31 @@ function isApprovedCommit(
   )
 }
 
+function readFormString(
+  formData: FormData,
+  name: string
+): string | null {
+  const value = formData.get(name)
+  return typeof value === "string" && value.trim() ? value.trim() : null
+}
+
 async function readReturnParams(request: Request): Promise<{
   tokenWs: string | null
+  tbkToken: string | null
+  tbkBuyOrder: string | null
 }> {
   const url = new URL(request.url)
   let tokenWs = url.searchParams.get("token_ws")
+  let tbkToken = url.searchParams.get("TBK_TOKEN")
+  let tbkBuyOrder = url.searchParams.get("TBK_ORDEN_COMPRA")
 
   if (request.method === "POST") {
     try {
       const formData = await request.formData()
-      const formToken = formData.get("token_ws")
-
-      if (typeof formToken === "string" && formToken) {
-        tokenWs = formToken
-      }
+      tokenWs = readFormString(formData, "token_ws") ?? tokenWs
+      tbkToken = readFormString(formData, "TBK_TOKEN") ?? tbkToken
+      tbkBuyOrder =
+        readFormString(formData, "TBK_ORDEN_COMPRA") ?? tbkBuyOrder
     } catch {
       // Body no form-urlencoded: se usan solo query params.
     }
@@ -101,6 +123,8 @@ async function readReturnParams(request: Request): Promise<{
 
   return {
     tokenWs: tokenWs?.trim() || null,
+    tbkToken: tbkToken?.trim() || null,
+    tbkBuyOrder: tbkBuyOrder?.trim() || null,
   }
 }
 
@@ -111,11 +135,14 @@ async function handleCommit(request: Request) {
     params = await readReturnParams(request)
   } catch (error) {
     console.error("[webpay/commit] params error:", error)
-    return safeRedirectToConfirmation()
+    return safeRedirectToConfirmation("error_before_authorization")
   }
 
   if (!params.tokenWs) {
-    return safeRedirectToConfirmation()
+    if (params.tbkToken || params.tbkBuyOrder) {
+      return safeRedirectToConfirmation("cancelled", params.tbkBuyOrder ?? undefined)
+    }
+    return safeRedirectToConfirmation("error_before_authorization")
   }
 
   let transaction: ReturnType<typeof createWebpayTransaction>
@@ -130,44 +157,55 @@ async function handleCommit(request: Request) {
     const message =
       error instanceof Error ? error.message : "Configuración Webpay incompleta"
     console.error("[webpay/commit] config error:", message)
-    return safeRedirectToConfirmation()
+    return safeRedirectToConfirmation("error_before_authorization")
   }
 
   try {
     const commitResponse = await transaction.commit(params.tokenWs)
     const approved = isApprovedCommit(commitResponse, expectedAmount)
+    const buyOrder =
+      typeof commitResponse.buy_order === "string"
+        ? commitResponse.buy_order
+        : ""
 
     if (approved) {
-      const buyOrder =
-        typeof commitResponse.buy_order === "string"
-          ? commitResponse.buy_order
-          : ""
-      const amount = Number(commitResponse.amount)
-
-      if (buyOrder) {
-        await pendingPurchaseService.registerApprovedWebpayPayment({
-          buyOrder,
-          transactionToken: params.tokenWs,
-          amount: Number.isFinite(amount) ? amount : expectedAmount,
-          paymentDate:
-            typeof commitResponse.transaction_date === "string"
-              ? commitResponse.transaction_date
-              : undefined,
-        })
-      } else {
+      if (!buyOrder) {
         console.error("[webpay/commit] approved but missing buy_order")
+        return safeRedirectToConfirmation("authorized_persistence_error")
       }
-    } else {
-      console.error("[webpay/commit] payment not authorized", {
-        status: commitResponse.status,
-        response_code: commitResponse.response_code,
+
+      const amount = Number(commitResponse.amount)
+      const purchase = await pendingPurchaseService.registerApprovedWebpayPayment({
+        buyOrder,
+        transactionToken: params.tokenWs,
+        amount: Number.isFinite(amount) ? amount : expectedAmount,
+        paymentDate:
+          typeof commitResponse.transaction_date === "string"
+            ? commitResponse.transaction_date
+            : undefined,
       })
+
+      if (!purchase) {
+        console.error("[webpay/commit] authorized but persistence failed", {
+          buyOrder,
+        })
+        return safeRedirectToConfirmation(
+          "authorized_persistence_error",
+          buyOrder
+        )
+      }
+
+      return safeRedirectToConfirmation("approved", buyOrder)
     }
 
-    return safeRedirectToConfirmation()
+    console.error("[webpay/commit] payment not authorized", {
+      status: commitResponse.status,
+      response_code: commitResponse.response_code,
+    })
+    return safeRedirectToConfirmation("declined", buyOrder || undefined)
   } catch (error) {
     console.error("[webpay/commit] Webpay commit error:", error)
-    return safeRedirectToConfirmation()
+    return safeRedirectToConfirmation("error_before_authorization")
   }
 }
 
